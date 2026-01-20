@@ -3,6 +3,9 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, decreaseQty, increaseQty } from "@/features/cart/cartSlice";
+import { clearCart } from "@/features/cart/cartSlice";
 
 const MENU_ITEMS = [
   {
@@ -50,6 +53,11 @@ const MENU_ITEMS = [
 ];
 
 export default function MenuSection() {
+  const cart = useSelector((s: any) => s.cart.items);
+  const dispatch = useDispatch();
+  const inCart = (id: string) =>
+    cart.find((i: { _id: string }) => i._id === id);
+
   return (
     <section className="bg-background py-16 sm:py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -123,29 +131,47 @@ export default function MenuSection() {
                 </p>
 
                 {/* ADD TO CART */}
-                <button
-                  className="
-                    mt-4 w-full
-                    border border-primary
-                    text-primary
-                    font-semibold
-                    py-2.5 rounded-lg
-                    cursor-pointer
-                    hover:bg-primary hover:text-white
-                    transition-all duration-300
-                  "
-                >
-                  Add to Cart
-                </button>
+                {inCart(item.name) ? (
+                  <div className="flex justify-center items-center gap-3 mt-4">
+                    <button
+                      onClick={() => dispatch(decreaseQty(item.name))}
+                      className="bg-orange-500 w-9 h-9 rounded-full"
+                    >
+                      −
+                    </button>
+                    <span className="text-white font-bold">
+                      {inCart(item.name).qty}
+                    </span>
+                    <button
+                      onClick={() => dispatch(increaseQty(item.name))}
+                      className="bg-orange-500 w-9 h-9 rounded-full"
+                    >
+                      +
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() =>
+                      dispatch(addToCart({ ...item, _id: item.name }))
+                    }
+                    className="mt-4 w-full border border-primary text-primary py-2.5 rounded-lg hover:bg-primary hover:text-white"
+                  >
+                    Add to Cart
+                  </button>
+                  
+                )}
+                
               </div>
             </motion.div>
           ))}
         </motion.div>
       </div>
-      <div className="
+      <div
+        className="
       mt-15
       flex items-center justify-center
-      ">
+      "
+      >
         <button
           className="
                cursor-pointer

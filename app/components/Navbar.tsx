@@ -2,18 +2,25 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, ShoppingCart } from "lucide-react";
+import { useSelector } from "react-redux";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [policyOpen, setPolicyOpen] = useState(false);
+  const count = useSelector((s: any) =>
+    s.cart.items.reduce((a: any, b: { qty: any }) => a + b.qty, 0)
+  );
 
   return (
     <header className="bg-[#0B0B0B] text-white sticky top-0 z-50">
       <nav className="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* LOGO */}
-        <Link href="/" className="text-lg text-white lg:text-xl font-bold text-primary">
+        <Link
+          href="/"
+          className="text-lg text-white lg:text-xl font-bold text-primary"
+        >
           Mittal Catering
         </Link>
 
@@ -54,6 +61,18 @@ export default function Navbar() {
           <NavLink href="/group-order-inquiry">Group Order Inquiry</NavLink>
           <NavLink href="/contact-us">Contact Us</NavLink>
         </ul>
+
+        <div className="relative">
+          <ShoppingCart size={26} />
+
+          <Link href="/checkout" className="absolute inset-0" aria-label="Cart">
+            {count > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-xs text-white w-5 h-5 flex items-center justify-center rounded-full">
+                {count}
+              </span>
+            )}
+          </Link>
+        </div>
 
         {/* MOBILE BUTTON */}
         <button
@@ -160,7 +179,7 @@ export default function Navbar() {
                   Privacy Policy
                 </MobileLink>
                 <MobileLink
-                  href="/terms-and-conditions"
+                  href="/terms-conditions"
                   close={() => setMobileOpen(false)}
                 >
                   Terms & Conditions

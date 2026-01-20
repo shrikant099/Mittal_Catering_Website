@@ -1,7 +1,10 @@
 import AboutHomeSection from "./components/AboutHomeSection";
+import AnnouncementBar from "./components/AnnouncementBar";
 import FeaturesSection from "./components/FeaturesSection";
+import Footer from "./components/Footer";
 import HeroSection from "./components/HeroSection";
 import MenuSection from "./components/MenuItems";
+import Navbar from "./components/Navbar";
 import WelcomeSection from "./components/WelcomeSection";
 
 export const metadata = {
@@ -15,6 +18,9 @@ export const metadata = {
 
 export default function Home() {
   return (
+    <>
+    <AnnouncementBar/>
+    <Navbar/>
     <div className="bg-white text-black">
       <main>
         <HeroSection />
@@ -24,5 +30,7 @@ export default function Home() {
         <FeaturesSection />
       </main>
     </div>
+    <Footer/>
+    </>
   );
 }

@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Image from "next/image";
-import Navbar from "./components/Navbar";
-import AnnouncementBar from "./components/AnnouncementBar";
-import Footer from "./components/Footer";
+import Providers from "@/providers/provider";
+import { Toaster } from "react-hot-toast";
+import CartPopupBar from "./components/CartPopupBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,9 +20,9 @@ export const metadata: Metadata = {
     "Best Caterers in India | Top Event Caterers in Rajasthan, India - Mittal Catering",
   description:
     "Mittal Catering is one of India’s Top Event Caterers specializing in offering best event catering services for all occasions across Rajasthan, India.",
-    icons: {
-      icon: "/mittals-logo.ico",
-    },
+  icons: {
+    icon: "/mittals-logo.ico",
+  },
 };
 
 export default function RootLayout({
@@ -36,10 +35,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AnnouncementBar />
-        <Navbar />
-        {children}
-        <Footer />
+        <Providers>
+          {children}
+          <CartPopupBar/>
+          <Toaster position="top-center" reverseOrder={false} />
+        </Providers>
       </body>
     </html>
   );

@@ -2,14 +2,20 @@
 
 :root {
   /* Background & Text */
-  --background: #0b0b0b;        /* Pure Black */
-  --foreground: #f5f5f5;        /* Light Text */
+  --background: #0b0b0b;
+  /* Pure Black */
+  --foreground: #f5f5f5;
+  /* Light Text */
 
   /* Brand Colors (ONLY ONE) */
-  --primary: #f59e0b;           /* Orange / Golden */
-  --secondary: #f59e0b;         /* Same as primary */
-  --accent: #f59e0b;            /* Same as primary */
-  --muted: #1a1a1a;             /* Dark card background */
+  --primary: #f59e0b;
+  /* Orange / Golden */
+  --secondary: #f59e0b;
+  /* Same as primary */
+  --accent: #f59e0b;
+  /* Same as primary */
+  --muted: #1a1a1a;
+  /* Dark card background */
 }
 
 /* Tailwind theme variables */
@@ -35,4 +41,6 @@ body {
   padding: 0;
   box-sizing: border-box;
   overflow-x: hidden;
+  overflow-y: auto;
+
 }

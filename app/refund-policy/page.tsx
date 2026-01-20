@@ -1,4 +1,7 @@
 import Link from "next/link";
+import AnnouncementBar from "../components/AnnouncementBar";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 export const metadata = {
   title: "Return & Refund Policy | Mittal Catering Ajmer",
@@ -9,6 +12,9 @@ export const metadata = {
 
 const page = () => {
   return (
+    <>
+    <AnnouncementBar/>
+    <Navbar/>
     <section className="bg-black text-gray-300">
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Page Title */}
@@ -252,6 +258,8 @@ const page = () => {
         </div>
       </div>
     </section>
+    <Footer/>
+    </>
   );
 };
 
