@@ -72,7 +72,7 @@ export default function ContactUsPage() {
 
             <div className="pt-4">
               <Link
-                href="/group-order-enquiry"
+                href="/group-order-inquiry"
                 className="inline-block bg-primary text-black px-6 py-3 rounded-xl font-bold"
               >
                 Bulk / Group Order Enquiry →
@@ -93,10 +93,6 @@ export default function ContactUsPage() {
               <input
                 placeholder="Mobile Number"
                 className="bg-black border border-white/10 p-3 rounded-xl"
-              />
-              <input
-                placeholder="Email"
-                className="bg-black border border-white/10 p-3 rounded-xl sm:col-span-2"
               />
               <textarea
                 placeholder="Your Message / Requirement"
