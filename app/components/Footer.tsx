@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 py-12">
 
         {/* Top Section */}
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-2 lg:grid-cols-4">
 
           {/* About */}
           <div>
@@ -53,7 +53,7 @@ const Footer = () => {
             </p>
 
             <p className="text-sm mb-1">
-              📞{" "}
+              📞
               <a
                 href="tel:+919983748159"
                 className="hover:text-primary"
@@ -63,10 +63,9 @@ const Footer = () => {
             </p>
 
             <p className="text-sm mb-4">
-              ✉️{" "}
               <a
                 href="mailto:mittalcatering.ajmer@gmail.com"
-                className="hover:text-primary"
+                className="hover:text-primary text-sm truncate"
               >
                 mittalcatering.ajmer@gmail.com
               </a>

@@ -1,11 +1,16 @@
 import AboutHomeSection from "./components/AboutHomeSection";
 import AnnouncementBar from "./components/AnnouncementBar";
+import CustomerReviews from "./components/CustomerReviews";
 import FeaturesSection from "./components/FeaturesSection";
 import Footer from "./components/Footer";
 import HeroSection from "./components/HeroSection";
+import HomeContactSection from "./components/HomeContactSection";
+import HowItWorks from "./components/HowItWorks";
+import LiveOrdersCarousel from "./components/LiveOrdersCarousel";
 import MenuSection from "./components/MenuItems";
 import Navbar from "./components/Navbar";
 import WelcomeSection from "./components/WelcomeSection";
+import WhyChooseMittalCatering from "./components/WhyChooseMittalCatering";
 
 export const metadata = {
   title:
@@ -26,11 +31,18 @@ export default function Home() {
         <HeroSection />
         <WelcomeSection />
         <MenuSection />
+        <WhyChooseMittalCatering/>
         <AboutHomeSection/>
+        <HowItWorks/>
+        <HomeContactSection/>
+        <LiveOrdersCarousel/>
         <FeaturesSection />
+        <CustomerReviews/>
       </main>
     </div>
     <Footer/>
     </>
   );
 }
+
+

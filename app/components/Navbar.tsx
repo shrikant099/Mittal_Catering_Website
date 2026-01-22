@@ -57,7 +57,7 @@ export default function Navbar() {
             </Dropdown>
           </li>
 
-          <NavLink href="/blogs">Blogs</NavLink>
+          <NavLink href="/blog">Blogs</NavLink>
           <NavLink href="/group-order-inquiry">Group Order Inquiry</NavLink>
           <NavLink href="/contact-us">Contact Us</NavLink>
         </ul>

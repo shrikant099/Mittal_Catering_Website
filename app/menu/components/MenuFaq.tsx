@@ -3,12 +3,17 @@ import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { addToCart } from "@/features/cart/cartSlice";
+import { addToCart, decreaseQty, increaseQty } from "@/features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategoryItems } from "@/features/menuPublic/menuSlicePublic";
 
 export default function MenuFaq({ categories }: { categories: any[] }) {
   const itemsByCategory = useSelector((s: any) => s.menuPublic.itemsByCategory);
+
+  const cart = useSelector((s: any) => s.cart.items);
+
+  const inCart = (id: string) =>
+    cart.find((i: { _id: string }) => i._id === id);
 
   const [open, setOpen] = useState<string | null>(null);
   const [items, setItems] = useState<any[]>([]);
@@ -99,21 +104,70 @@ export default function MenuFaq({ categories }: { categories: any[] }) {
                             {i.description}
                           </p>
                           <p className="text-primary font-bold mt-1">
-                            ₹{i.price}
+                            {i.discount ? (
+                              // <div>
+                              <>
+                                <span className="line-through text-gray-400 mr-2">
+                                  ₹{i.price}
+                                </span>
+                                <span className="text-green-400 font-semibold">
+                                  ₹
+                                  {Math.round(
+                                    i.price - (i.price * i.discount) / 100
+                                  )}
+                                </span>
+                                {/* </div> */}
+                              </>
+                            ) : (
+                              <span>₹{i.price}</span>
+                            )}
                           </p>
                         </div>
 
-                        <button
-                          onClick={() => dispatch(addToCart(i))}
-                          className="
-                            border border-primary text-primary
-                            px-5 py-2 rounded-lg
-                            hover:bg-primary hover:text-black
-                            transition font-semibold
-                          "
-                        >
-                          Add
-                        </button>
+                        {/* ADD TO CART */}
+                  
+                        <div className="w-[130px] flex justify-end">
+                          {inCart(i.name) ? (
+                            <div className="flex items-center justify-between w-full h-10 px-2 rounded-full bg-[#0f0f0f] border border-primary shadow-inner">
+                              <button
+                                onClick={() => dispatch(decreaseQty(i.name))}
+                                className="w-8 h-8 flex items-center justify-center rounded-full bg-primary text-black font-bold hover:scale-105 transition"
+                              >
+                                −
+                              </button>
+
+                              <span className="text-white font-semibold text-sm">
+                                {inCart(i.name).qty}
+                              </span>
+
+                              <button
+                                onClick={() => dispatch(increaseQty(i.name))}
+                                className="w-8 h-8 flex items-center justify-center rounded-full bg-primary text-black font-bold hover:scale-105 transition"
+                              >
+                                +
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() =>
+                                dispatch(
+                                  addToCart({
+                                    ...i,
+                                    _id: i.name,
+                                    price: i.discount
+                                      ? Math.round(i.price - (i.price * i.discount) / 100)
+                                      : i.price,
+                                    originalPrice: i.price, 
+                                  })
+                                )
+                              }
+                              className="w-full h-10 rounded-full border border-primary text-primary text-sm font-semibold
+                 hover:bg-primary hover:text-black transition-all"
+                            >
+                              Add
+                            </button>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>

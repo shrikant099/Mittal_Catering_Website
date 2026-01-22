@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, decreaseQty, increaseQty } from "@/features/cart/cartSlice";
-import { clearCart } from "@/features/cart/cartSlice";
 
 const MENU_ITEMS = [
   {
@@ -61,7 +60,7 @@ export default function MenuSection() {
   return (
     <section className="bg-background py-16 sm:py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* SECTION HEADING (SEO) */}
+        {/* SECTION HEADING */}
         <div className="text-center mb-14">
           <h3 className="text-3xl sm:text-4xl lg:text-5xl text-white font-extrabold">
             Our <span className="text-primary">Menu</span>
@@ -79,14 +78,12 @@ export default function MenuSection() {
           viewport={{ once: true }}
           variants={{
             hidden: {},
-            visible: {
-              transition: { staggerChildren: 0.12 },
-            },
+            visible: { transition: { staggerChildren: 0.12 } },
           }}
           className="
             grid
             grid-cols-1
-           sm:grid-cols-2
+            min-[340px]:grid-cols-2
             lg:grid-cols-3
             gap-6 lg:gap-8
           "
@@ -99,17 +96,20 @@ export default function MenuSection() {
                 visible: { opacity: 1, y: 0 },
               }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              whileHover={{ scale: 1.03 }}
               className="
                 bg-[#1A1A1A]
                 rounded-2xl
                 shadow-lg
                 overflow-hidden
                 border border-black/5
+                transition-transform
+                md:hover:scale-[1.03]
+                flex flex-col
+                h-full
               "
             >
               {/* IMAGE */}
-              <div className="relative w-full h-44 sm:h-48">
+              <div className="relative w-full h-36 sm:h-44 lg:h-48">
                 <Image
                   src={item.image}
                   alt={`${item.name} by Mittal Catering`}
@@ -119,71 +119,86 @@ export default function MenuSection() {
               </div>
 
               {/* CONTENT */}
-              <div className="p-5 text-center">
+              <div className="p-4 sm:p-5 text-center flex-1 flex flex-col">
                 <h3 className="font-bold text-lg text-[#FFFDFC]">
                   {item.name}
                 </h3>
 
-                <p className="text-sm text-gray-400 mt-1">{item.desc}</p>
+                <p className="text-sm text-gray-400 mt-1 line-clamp-2 min-h-[40px]">
+                  {item.desc}
+                </p>
 
                 <p className="text-primary font-bold text-lg mt-3">
                   ₹{item.price}
                 </p>
 
-                {/* ADD TO CART */}
-                {inCart(item.name) ? (
-                  <div className="flex justify-center items-center gap-3 mt-4">
+                {/* BUTTONS — FIXED */}
+                <div className="mt-auto">
+                  {inCart(item.name) ? (
+                    <div className="flex justify-center items-center gap-3 mt-4">
+                      <button
+                        onClick={() => dispatch(decreaseQty(item.name))}
+                        className="bg-orange-500 w-9 h-9 rounded-full text-white text-lg"
+                      >
+                        −
+                      </button>
+
+                      <span className="text-white font-bold">
+                        {inCart(item.name).qty}
+                      </span>
+
+                      <button
+                        onClick={() => dispatch(increaseQty(item.name))}
+                        className="bg-orange-500 w-9 h-9 rounded-full text-white text-lg"
+                      >
+                        +
+                      </button>
+                    </div>
+                  ) : (
                     <button
-                      onClick={() => dispatch(decreaseQty(item.name))}
-                      className="bg-orange-500 w-9 h-9 rounded-full"
+                      onClick={() =>
+                        dispatch(addToCart({ ...item, _id: item.name }))
+                      }
+                      className="
+                        mt-4
+                        w-full
+                        border border-primary
+                        text-primary
+                        py-2.5
+                        rounded-lg
+                        hover:bg-primary
+                        hover:text-white
+                        transition-all
+                      "
                     >
-                      −
+                      Add to Cart
                     </button>
-                    <span className="text-white font-bold">
-                      {inCart(item.name).qty}
-                    </span>
-                    <button
-                      onClick={() => dispatch(increaseQty(item.name))}
-                      className="bg-orange-500 w-9 h-9 rounded-full"
-                    >
-                      +
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() =>
-                      dispatch(addToCart({ ...item, _id: item.name }))
-                    }
-                    className="mt-4 w-full border border-primary text-primary py-2.5 rounded-lg hover:bg-primary hover:text-white"
-                  >
-                    Add to Cart
-                  </button>
-                  
-                )}
-                
+                  )}
+                </div>
               </div>
             </motion.div>
           ))}
         </motion.div>
       </div>
-      <div
-        className="
-      mt-15
-      flex items-center justify-center
-      "
-      >
-        <button
-          className="
-               cursor-pointer
-                bg-primary text-white
-                px-8 py-4 rounded-lg
-                font-semibold tracking-wide
-                hover:bg-accent
-                transition-all duration-300
-              "
-        >
-          <Link href={"/menu"}>View Menu</Link>
-        </button>
+
+      {/* VIEW MENU BUTTON */}
+      <div className="mt-16 flex justify-center">
+        <Link href="/menu">
+          <button
+            className="
+              bg-primary
+              text-white
+              px-8 py-4
+              rounded-lg
+              font-semibold
+              tracking-wide
+              hover:bg-accent
+              transition-all
+            "
+          >
+            View Menu
+          </button>
+        </Link>
       </div>
     </section>
   );

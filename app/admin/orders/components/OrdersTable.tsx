@@ -1,16 +1,20 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import StatusSelect from "./StatusSelect";
-import { MoreVertical, MessageCircle, Trash2 } from "lucide-react";
+import { MoreVertical, MessageCircle, Trash2, PencilLine } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function OrdersTable() {
   const [orders, setOrders] = useState<any[]>([]);
   const [openAction, setOpenAction] = useState<string | null>(null);
   const actionRef = useRef<HTMLDivElement | null>(null);
+  const [editOrder, setEditOrder] = useState<any | null>(null);
+  const [saving, setSaving] = useState(false);
 
   async function loadOrders() {
     const res = await fetch("/api/order");
     const json = await res.json();
+    console.log(JSON.stringify(json, null, 2));
     setOrders(json.data || []);
   }
 
@@ -76,6 +80,7 @@ export default function OrdersTable() {
     if (!confirm("Delete this order?")) return;
     await fetch(`/api/order/${orderId}`, { method: "DELETE" });
     loadOrders();
+    toast.success("Order deleted");
   };
 
   return (
@@ -124,33 +129,53 @@ export default function OrdersTable() {
                 </td>
 
                 <td className="p-3">
-                  <div className="space-y-1">
-                    <p className="font-semibold leading-tight">
+                  <div className="space-y-2">
+                    {/* Name */}
+                    <p className="font-semibold text-white leading-tight">
                       {o.customer.fullName}
                     </p>
+
+                    {/* Mobile */}
                     <p className="text-white/50 text-xs">
                       {o.customer.mobileNumber}
                     </p>
-                    <div className="mt-2 grid grid-cols-2 xl:grid-cols-4 gap-2 text-[11px] text-white/80 bg-white/5 rounded-xl p-2">
-                      <div className="flex justify-between gap-2">
-                        <span>Train</span>
+
+                    {/* Train / Seat / PNR / Coach */}
+                    <div
+                      className="
+        mt-3
+        grid grid-cols-2
+        gap-x-6 gap-y-2
+        text-[12px]
+        text-white/80
+        bg-white/5
+        rounded-xl
+        p-3
+        min-h-[90px]
+      "
+                    >
+                      <div className="flex justify-between">
+                        <span className="opacity-70">Train No</span>
                         <span className="font-mono">
                           {o.customer.trainNumber}
                         </span>
                       </div>
-                      <div className="flex justify-between gap-2">
-                        <span>PNR</span>
-                        <span className="font-mono truncate">
+
+                      <div className="flex justify-between">
+                        <span className="opacity-70">Seat</span>
+                        <span className="font-mono">{o.customer.seat}</span>
+                      </div>
+
+                      <div className="flex justify-between">
+                        <span className="opacity-70">PNR &nbsp;</span>
+                        <span className="font-mono truncate max-w-[110px]">
                           {o.customer.pnr}
                         </span>
                       </div>
-                      <div className="flex justify-between gap-2">
-                        <span>Coach</span>
+
+                      <div className="flex justify-between">
+                        <span className="opacity-70">Coach</span>
                         <span className="font-mono">{o.customer.coach}</span>
-                      </div>
-                      <div className="flex justify-between gap-2">
-                        <span>Seat</span>
-                        <span className="font-mono">{o.customer.seat}</span>
                       </div>
                     </div>
                   </div>
@@ -220,16 +245,34 @@ export default function OrdersTable() {
                   </button>
 
                   {openAction === o._id && (
-                    <div className="absolute right-2 top-10 z-20 w-44 bg-[#0f0f0f] border border-white/10 rounded-xl shadow-xl overflow-hidden">
+                    <div className="absolute right-2 top-10 z-20 w-48 bg-[#0f0f0f] border border-white/10 rounded-xl shadow-xl overflow-hidden">
+                      <button
+                        onClick={() => {
+                          setEditOrder(o);
+                          setOpenAction(null);
+                        }}
+                        className="
+    w-full flex items-center gap-3
+    px-4 py-3 text-sm font-medium
+    text-blue-400
+    hover:bg-blue-500/10
+    transition
+  "
+                      >
+                        <PencilLine size={16} className="text-blue-400" />
+                        Edit Order
+                      </button>
+
                       <button
                         onClick={() => sendWhatsApp(o)}
-                        className="w-full cursor-pointer flex items-center gap-3 px-4 py-3 text-sm hover:bg-white/5"
+                        className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-white/5"
                       >
                         <MessageCircle size={16} /> Send WhatsApp
                       </button>
+
                       <button
                         onClick={() => deleteOrder(o.orderId)}
-                        className="w-full cursor-pointer flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-red-500/10"
+                        className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-red-500/10"
                       >
                         <Trash2 size={16} /> Delete Order
                       </button>
@@ -241,6 +284,310 @@ export default function OrdersTable() {
           </tbody>
         </table>
       </div>
+
+      {/* Edit Order PopUp */}
+      {editOrder && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center px-4">
+          <div className="bg-[#121212] w-full max-w-2xl rounded-2xl p-6 shadow-2xl border border-white/10 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-extrabold text-white">Edit Order</h3>
+              <button
+                onClick={() => setEditOrder(null)}
+                className="text-white/60 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* FORM */}
+            <div className="grid sm:grid-cols-2 gap-4 text-sm">
+              <Field
+                label="Passenger Name"
+                value={editOrder.customer.fullName}
+                onChange={(e: any) =>
+                  setEditOrder({
+                    ...editOrder,
+                    customer: {
+                      ...editOrder.customer,
+                      fullName: e.target.value,
+                    },
+                  })
+                }
+              />
+
+              <Field
+                label="Mobile Number"
+                value={editOrder.customer.mobileNumber}
+                onChange={(e: any) =>
+                  setEditOrder({
+                    ...editOrder,
+                    customer: {
+                      ...editOrder.customer,
+                      mobileNumber: e.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10),
+                    },
+                  })
+                }
+              />
+
+              <Field
+                label="Train Number"
+                value={editOrder.customer.trainNumber}
+                onChange={(e: any) =>
+                  setEditOrder({
+                    ...editOrder,
+                    customer: {
+                      ...editOrder.customer,
+                      trainNumber: e.target.value,
+                    },
+                  })
+                }
+              />
+
+              <Field
+                label="PNR Number"
+                value={editOrder.customer.pnr}
+                onChange={(e: any) =>
+                  setEditOrder({
+                    ...editOrder,
+                    customer: { ...editOrder.customer, pnr: e.target.value },
+                  })
+                }
+              />
+
+              <Field
+                label="Coach"
+                value={editOrder.customer.coach}
+                onChange={(e: any) =>
+                  setEditOrder({
+                    ...editOrder,
+                    customer: { ...editOrder.customer, coach: e.target.value },
+                  })
+                }
+              />
+
+              <Field
+                label="Seat"
+                value={editOrder.customer.seat}
+                onChange={(e: any) =>
+                  setEditOrder({
+                    ...editOrder,
+                    customer: {
+                      ...editOrder.customer,
+                      seat: e.target.value.replace(/\D/g, ""),
+                    },
+                  })
+                }
+              />
+
+              {/* STATUS */}
+              <div>
+                <label className="text-white/70 text-xs mb-1 block">
+                  Order Status
+                </label>
+
+                <select
+                  value={editOrder.status}
+                  onChange={(e) =>
+                    setEditOrder({
+                      ...editOrder,
+                      status: e.target.value,
+                    })
+                  }
+                  className="
+      w-full bg-[#1A1A1A] text-white rounded-lg p-3
+      outline-none focus:ring-2 focus:ring-primary
+    "
+                >
+                  <option value="Placed">Placed</option>
+                  <option value="Confirm">Confirm</option>
+                  <option value="Dispatch">Dispatch</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Cancel">Cancel</option>
+                </select>
+              </div>
+
+              {/* Payment Status */}
+              <div>
+                <label className="text-white/70">Payment Status</label>
+                <select
+                  value={editOrder.paymentStatus}
+                  onChange={(e) =>
+                    setEditOrder({
+                      ...editOrder,
+                      paymentStatus: e.target.value,
+                    })
+                  }
+                  className="w-full mt-1 bg-[#1A1A1A] text-white p-3 rounded-lg"
+                >
+                  <option>Pending</option>
+                  <option>Paid</option>
+                  <option>Failed</option>
+                </select>
+              </div>
+
+              {/* Payment Method */}
+              <div>
+                <label className="text-white/70 text-xs mb-1 block">
+                  Payment Method
+                </label>
+
+                <select
+                  value={editOrder.paymentMethod}
+                  onChange={(e) =>
+                    setEditOrder({
+                      ...editOrder,
+                      paymentMethod: e.target.value,
+                    })
+                  }
+                  className="
+      w-full bg-[#1A1A1A] text-white rounded-lg p-3
+      outline-none focus:ring-2 focus:ring-primary
+    "
+                >
+                  <option value="COD">Cash On Delivery</option>
+                  <option value="ONLINE">Online</option>
+                </select>
+              </div>
+
+              {/* Order Items */}
+              {/* <div className="sm:col-span-2 mt-4">
+  <h4 className="text-white font-semibold mb-3">Order Items</h4>
+
+  <div className="space-y-3">
+    {editOrder.items.map((item: any, idx: number) => (
+      <div
+        key={item._id}
+        className="flex items-center justify-between bg-[#1A1A1A] p-3 rounded-xl"
+      >
+        <div>
+          <p className="text-white font-medium">{item.name}</p>
+          <p className="text-white/50 text-xs">₹{item.price} each</p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              const items = [...editOrder.items];
+              if (items[idx].qty > 1) items[idx].qty -= 1;
+              setEditOrder({ ...editOrder, items });
+            }}
+            className="w-8 h-8 rounded-full bg-white/10 text-white"
+          >
+            −
+          </button>
+
+          <span className="text-white font-bold w-6 text-center">
+            {item.qty}
+          </span>
+
+          <button
+            onClick={() => {
+              const items = [...editOrder.items];
+              items[idx].qty += 1;
+              setEditOrder({ ...editOrder, items });
+            }}
+            className="w-8 h-8 rounded-full bg-primary text-black"
+          >
+            +
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+</div> */}
+
+
+              {/* NOTES */}
+              <div className="sm:col-span-2">
+                <label className="text-white/70">Instructions</label>
+                <textarea
+                  value={editOrder.customer.instructions || ""}
+                  onChange={(e) =>
+                    setEditOrder({
+                      ...editOrder,
+                      customer: {
+                        ...editOrder.customer,
+                        instructions: e.target.value,
+                      },
+                    })
+                  }
+                  className="w-full mt-1 bg-[#1A1A1A] text-white p-3 rounded-lg h-24"
+                />
+              </div>
+            </div>
+
+            {/* ACTIONS */}
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setEditOrder(null)}
+                className="px-5 cursor-pointer py-2 rounded-lg border border-white/20 text-white"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={async () => {
+                  try {
+                    setSaving(true);
+
+                    const res = await fetch(`/api/order/${editOrder.orderId}`, {
+                      method: "PUT",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        customer: {
+                          fullName: editOrder.customer.fullName,
+                          mobileNumber: editOrder.customer.mobileNumber,
+                          trainNumber: editOrder.customer.trainNumber,
+                          pnr: editOrder.customer.pnr,
+                          coach: editOrder.customer.coach,
+                          seat: editOrder.customer.seat,
+                          instructions: editOrder.customer.instructions,
+                        },
+                        status: editOrder.status,
+                        paymentStatus: editOrder.paymentStatus,
+                        paymentMethod: editOrder.paymentMethod,
+                      }),
+                    });
+
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                      throw new Error(data.message || "Update failed");
+                    }
+
+                    toast.success("Order updated successfully");
+                    setEditOrder(null);
+                    loadOrders();
+                  } catch (err: any) {
+                    toast.error(err.message || "Something went wrong");
+                  } finally {
+                    setSaving(false);
+                  }
+                }}
+                className="px-6 py-2 cursor-pointer rounded-lg bg-primary text-black font-bold"
+              >
+                {saving ? "Saving..." : "Update Order"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Field({ label, ...props }: { label: string; [key: string]: any }) {
+  return (
+    <div>
+      <label className="text-white/70 text-xs mb-1 block">{label}</label>
+      <input
+        {...props}
+        className="w-full bg-[#1A1A1A] text-white rounded-lg p-3 outline-none focus:ring-2 focus:ring-primary"
+      />
     </div>
   );
 }

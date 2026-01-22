@@ -22,6 +22,7 @@ const menu = [
   { name: "Orders", href: "/admin/orders", icon: ShoppingCart },
   { name: "Categories", href: "/admin/categories", icon: List },
   { name: "Menu Items", href: "/admin/menu-items", icon: Package },
+  { name: "Blogs", href: "/admin/blogs", icon: Package },
 ];
 
 export default function AdminSidebar() {

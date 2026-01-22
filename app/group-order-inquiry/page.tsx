@@ -168,12 +168,11 @@ export default function GroupOrderEnquiryPage() {
             </div>
           </div>
         </section>
-
         {/* Footer CTA */}
         <section className="px-4 py-12 text-center border-t border-white/10">
           <p className="text-white/70">Call for Bulk Orders:</p>
-          <a href="tel:+919983748159">
-            <p className="text-xl font-bold text-orange-500">+919983748159</p>
+          <a href="tel:+919999748159">
+            <p className="text-xl font-bold text-orange-500">+919999748159</p>
           </a>
         </section>
       </main>

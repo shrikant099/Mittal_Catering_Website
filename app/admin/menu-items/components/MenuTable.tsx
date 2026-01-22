@@ -91,10 +91,24 @@ export default function MenuTable() {
                     {i.foodType}
                   </span>
                 </td>
-                <td>₹{i.price}</td>
                 <td>
                   {i.discount ? (
-                    <span className="px-2 py-1 bg-red-500/20 text-red-400">
+                    <div>
+                      <span className="line-through text-gray-400 mr-2">
+                        ₹{i.price}
+                      </span>
+                      <span className="text-green-400 font-semibold">
+                        ₹{Math.round(i.price - (i.price * i.discount) / 100)}
+                      </span>
+                    </div>
+                  ) : (
+                    <span>₹{i.price}</span>
+                  )}
+                </td>
+
+                <td>
+                  {i.discount ? (
+                    <span className="px-2 py-1 bg-green-500/40 text-white font-bold">
                       {i.discount}% OFF
                     </span>
                   ) : (

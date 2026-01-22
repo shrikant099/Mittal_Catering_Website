@@ -6,9 +6,11 @@ export async function GET(_: NextRequest) {
   try {
     await dbConnect();
 
-    const since = new Date(Date.now() - 24 * 60 * 60 * 1000); // last 24 hours
+    // 🔹 Last 24 hours
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
-    const pipeline = [
+    // 🔹 Today stats
+    const todayPipeline = [
       { $match: { createdAt: { $gte: since } } },
       {
         $group: {
@@ -22,27 +24,51 @@ export async function GET(_: NextRequest) {
         $project: {
           _id: 0,
           todayOrders: 1,
-          todayEarnings: "$todayEarnings",
+          todayEarnings: 1,
           customers: { $size: "$customers" },
         },
       },
     ];
 
-    const [stats] = await Order.aggregate(pipeline);
+    // 🔹 Lifetime total earnings
+    const totalPipeline = [
+      {
+        $group: {
+          _id: null,
+          totalEarnings: { $sum: "$total" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalEarnings: 1,
+        },
+      },
+    ];
 
-    const safe = stats || { todayOrders: 0, todayEarnings: 0, customers: 0 };
+    const [todayStats] = await Order.aggregate(todayPipeline);
+    const [totalStats] = await Order.aggregate(totalPipeline);
 
-    const avgDaily = safe.todayOrders
-      ? +(safe.todayEarnings / safe.todayOrders).toFixed(2)
+    const safeToday = todayStats || {
+      todayOrders: 0,
+      todayEarnings: 0,
+      customers: 0,
+    };
+
+    const totalEarnings = totalStats?.totalEarnings || 0;
+
+    const avgDaily = safeToday.todayOrders
+      ? +(safeToday.todayEarnings / safeToday.todayOrders).toFixed(2)
       : 0;
 
     return NextResponse.json({
       success: true,
       data: {
-        todayOrders: safe.todayOrders,
-        todayEarnings: +safe.todayEarnings.toFixed(2),
-        customers: safe.customers,
+        todayOrders: safeToday.todayOrders,
+        todayEarnings: +safeToday.todayEarnings.toFixed(2),
+        customers: safeToday.customers,
         avgDaily,
+        totalEarnings: +totalEarnings.toFixed(2), // 🔥 NEW FIELD
       },
     });
   } catch (err) {

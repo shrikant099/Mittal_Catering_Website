@@ -10,13 +10,48 @@ import Link from "next/link";
 export default function CheckoutClient() {
   const { items } = useSelector((s: any) => s.cart);
   const dispatch = useDispatch();
+  // Math Calculation For Billing
+  const originalSubtotal = useMemo(
+    () =>
+      items.reduce(
+        (a: number, i: any) => a + (i.originalPrice || i.price) * i.qty,
+        0
+      ),
+    [items]
+  );
 
+  const discountedSubtotal = useMemo(
+    () => items.reduce((a: number, i: any) => a + i.price * i.qty, 0),
+    [items]
+  );
+
+  const totalOriginal = useMemo(
+    () =>
+      items.reduce(
+        (a: number, i: any) => a + (i.originalPrice || i.price) * i.qty,
+        0
+      ),
+    [items]
+  );
+
+  const totalSaved = useMemo(
+    () => Math.max(0, originalSubtotal - discountedSubtotal),
+    [originalSubtotal, discountedSubtotal]
+  );
+
+  const gst = useMemo(
+    () => +(discountedSubtotal * 0.05).toFixed(2),
+    [discountedSubtotal]
+  );
+
+  const total = useMemo(
+    () => +(discountedSubtotal + gst).toFixed(2),
+    [discountedSubtotal, gst]
+  );
   const subtotal = useMemo(
     () => items.reduce((a: any, i: any) => a + i.price * i.qty, 0),
     [items]
   );
-  const gst = useMemo(() => +(subtotal * 0.05).toFixed(2), [subtotal]);
-  const total = useMemo(() => +(subtotal + gst).toFixed(2), [subtotal, gst]);
 
   const [form, setForm] = useState({
     name: "",
@@ -38,7 +73,7 @@ export default function CheckoutClient() {
       train: (v: string) => v.replace(/\D/g, "").slice(0, 5), // 5 digits
       pnr: (v: string) => v.replace(/\D/g, "").slice(0, 10), // 10 digits
       coach: (v: string) => v.replace(/[^a-zA-Z0-9]/g, "").slice(0, 3), // alphanumeric
-      seat: (v: string) => v.replace(/[^a-zA-Z0-9]/g, "").slice(0, 6), // alphanumeric
+      seat: (v: string) => Number(v.replace(/\D/g, "").slice(0, 6)),
       instructions: (v: string) => v.slice(0, 150),
     };
     const next = rules[name] ? rules[name](value) : value;
@@ -94,12 +129,12 @@ export default function CheckoutClient() {
     /^\d{5}$/.test(form.train) &&
     /^\d{10}$/.test(form.pnr) &&
     form.coach.length > 0 &&
-    form.seat.length > 0 &&
+    Number(form.seat) > 0 &&
     items.length > 0;
 
   return (
     <>
-      <button className="back-button fixed top-5 left-5 z-50 bg-[#fff] text-black p-3 rounded-full shadow-lg hover:shadow-xl">
+      <button className="back-button fixed font-bold top-10 left-5 z-50 bg-primary text-white p-3 rounded-full shadow-lg hover:shadow-xl">
         <Link href={"/menu"}>Back To Menu</Link>
       </button>
 
@@ -151,20 +186,30 @@ export default function CheckoutClient() {
                 <div className="border-t border-white/10 pt-4 space-y-2">
                   <div className="flex justify-between text-white/80">
                     <span>Subtotal</span>
-                    <span>₹{subtotal}</span>
+                    <span>₹{originalSubtotal}</span>
                   </div>
+
+                  {totalSaved > 0 && (
+                    <div className="flex justify-between text-green-400 font-semibold">
+                      <span>Discount</span>
+                      <span>-₹{totalSaved}</span>
+                    </div>
+                  )}
+
                   <div className="flex justify-between text-white/80">
                     <span>GST (5%)</span>
                     <span>₹{gst}</span>
                   </div>
-                  <div className="flex justify-between text-white font-extrabold text-lg">
+
+                  <div className="flex justify-between text-white font-extrabold text-lg pt-2 border-t border-white/10">
                     <span>Total</span>
                     <span>₹{total}</span>
                   </div>
                 </div>
+
                 <button
                   onClick={() => dispatch(clearCart())}
-                  className="mt-4 w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700"
+                  className="mt-4 w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-primary cursor-pointer"
                 >
                   Clear Cart
                 </button>
@@ -271,19 +316,19 @@ export default function CheckoutClient() {
                     <div className="space-y-4">
                       <button
                         onClick={payCOD}
-                        className="w-full bg-green-500 text-black py-4 rounded-xl font-bold hover:opacity-90"
+                        className="w-full bg-[#212121] cursor-pointer font-bold text-white py-4 rounded-xl font-bold hover:opacity-90"
                       >
                         Cash On Delivery
                       </button>
                       <button
                         onClick={payRazorpay}
-                        className="w-full bg-primary text-black py-4 rounded-xl font-bold hover:opacity-90"
+                        className="w-full bg-primary font-bold cursor-pointer text-black py-4 rounded-xl hover:opacity-90"
                       >
                         Pay Online (Razorpay)
                       </button>
                       <button
                         onClick={() => setShowPayment(false)}
-                        className="w-full border border-white/20 text-white py-3 rounded-xl"
+                        className="w-full border cursor-pointer border-white/20 text-white py-3 rounded-xl"
                       >
                         Cancel
                       </button>

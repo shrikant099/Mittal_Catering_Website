@@ -88,39 +88,6 @@ const page = () => {
             tradition, a responsibility, and a celebration of taste, trust, and
             togetherness.
           </p>
-
-          {/* Contact Info */}
-          <div className="pt-8 border-t border-gray-800">
-            <h3 className="text-xl font-semibold text-white mb-4">
-              Contact Information
-            </h3>
-
-            <p>
-              Website:{" "}
-              <a
-                href="https://www.mittalcateringajmer.com/"
-                className="text-primary underline"
-              >
-                https://www.mittalcateringajmer.com/
-              </a>
-            </p>
-
-            <p>
-              Email:{" "}
-              <a
-                href="mailto:info@mittalcateringajmer.com"
-                className="text-primary underline"
-              >
-                info@mittalcateringajmer.com
-              </a>
-            </p>
-
-            <p>
-              Address: House No. 1053A, Mittal Bhawan, Dhola Bhata Road, near
-              All Saint School, Professors Colony, Dhola Bhata Colony, Ajmer,
-              Rajasthan – 305007
-            </p>
-          </div>
         </div>
       </section>
       <Footer />
