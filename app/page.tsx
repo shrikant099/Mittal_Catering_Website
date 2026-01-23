@@ -27,7 +27,7 @@ export default function Home() {
     <AnnouncementBar/>
     <Navbar/>
     <div className="bg-white text-black">
-      <main>
+     <main className="overflow-x-hidden">
         <HeroSection />
         <WelcomeSection />
         <MenuSection />

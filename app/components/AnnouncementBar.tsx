@@ -29,7 +29,7 @@ export default function AnnouncementBar() {
           <span className="text-primary animate-pulse">E-mail:</span>
           <Link
             href="mailto:mittalcatering.ajmer@gmail.com"
-            className="hover:text-primary transition-colors duration-200"
+            className="hover:text-primary transition-colors duration-200 text-xs text-white break-all sm:break-normal"
           >
             mittalcatering.ajmer@gmail.com
           </Link>
@@ -40,7 +40,7 @@ export default function AnnouncementBar() {
           <span className="text-primary animate-pulse">Call us:</span>
           <Link
             href="tel:+919983748159"
-            className="hover:text-primary transition-colors duration-200"
+            className="hover:text-primary transition-colors duration-200 text-xs text-white whitespace-nowrap sm:whitespace-normal"
           >
             +91-9983748159
           </Link>

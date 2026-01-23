@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+
 :root {
   /* Background & Text */
   --background: #0b0b0b;
@@ -11,7 +25,7 @@
   --primary: #f59e0b;
   /* Orange / Golden */
   --secondary: #f59e0b;
-/* Same as primary */
+  /* Same as primary */
   --accent: #f59e0b;
   /* Same as primary */
   --muted: #1a1a1a;
@@ -42,5 +56,4 @@ body {
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
-
 }

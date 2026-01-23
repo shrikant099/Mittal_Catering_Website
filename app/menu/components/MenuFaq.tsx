@@ -88,17 +88,26 @@ export default function MenuFaq({ categories }: { categories: any[] }) {
                     {items.map((i) => (
                       <div
                         key={i._id}
-                        className="flex items-center gap-4 bg-[#1A1A1A] rounded-xl p-4 hover:bg-white/5 transition"
+                        className="
+                      flex  flex-col sm:flex-row
+                      sm:items-center
+                      gap-3 sm:gap-4
+                      bg-[#1A1A1A]
+                      rounded-xl
+                      p-4
+                      hover:bg-white/5
+                      transition
+                    "
                       >
                         <Image
                           src={i.image}
                           alt={i.name}
                           width={90}
                           height={90}
-                          className="rounded-xl object-cover"
+                          className="rounded-xl object-cover self-start sm:self-auto"
                         />
 
-                        <div className="flex-1">
+                        <div className="flex-1 py-2 w-full">
                           <h3 className="font-bold text-white">{i.name}</h3>
                           <p className="text-sm text-white/60">
                             {i.description}
@@ -125,8 +134,7 @@ export default function MenuFaq({ categories }: { categories: any[] }) {
                         </div>
 
                         {/* ADD TO CART */}
-                  
-                        <div className="w-[130px] flex justify-end">
+                        <div className="w-full sm:w-[130px] flex justify-end sm:justify-end">
                           {inCart(i.name) ? (
                             <div className="flex items-center justify-between w-full h-10 px-2 rounded-full bg-[#0f0f0f] border border-primary shadow-inner">
                               <button
@@ -155,9 +163,11 @@ export default function MenuFaq({ categories }: { categories: any[] }) {
                                     ...i,
                                     _id: i.name,
                                     price: i.discount
-                                      ? Math.round(i.price - (i.price * i.discount) / 100)
+                                      ? Math.round(
+                                          i.price - (i.price * i.discount) / 100
+                                        )
                                       : i.price,
-                                    originalPrice: i.price, 
+                                    originalPrice: i.price,
                                   })
                                 )
                               }
