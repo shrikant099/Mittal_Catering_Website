@@ -1,6 +1,8 @@
+import Image from "next/image";
 import AnnouncementBar from "../components/AnnouncementBar";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import WhyChooseMittalCatering from "../components/WhyChooseMittalCatering";
 
 export const metadata = {
   title: "About Us | Mittal Catering Ajmer Since 1983",
@@ -15,18 +17,24 @@ const page = () => {
       <Navbar />
       <section className="bg-black text-gray-300">
         {/* Banner */}
-        <div className="relative w-full h-[220px] md:h-[320px] lg:h-[420px]">
+        <div className="relative w-full aspect-[16/9] md:aspect-[21/9] bg-black">
           <img
-            src="https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=2000&auto=format&fit=crop"
+            src="https://res.cloudinary.com/dhxo0zx5u/image/upload/v1769174006/about_us_kw00dz.png"
             alt="Mittal Catering Ajmer Banner"
-            className="w-full h-full object-cover"
+            className="
+     w-full h-full
+    object-contain
+    md:object-cover
+    md:object-left
+    "
           />
-          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-            <div className="text-center px-4">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
+
+          <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+            <div className="text-center hidden  px-4 max-w-2xl">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
                 Mittal Catering – Since 1983
               </h1>
-              <p className="text-primary mt-2 text-sm md:text-base">
+              <p className="text-primary mt-2 text-sm sm:text-base">
                 Trusted Catering Services in Ajmer
               </p>
             </div>
@@ -34,10 +42,11 @@ const page = () => {
         </div>
 
         {/* Content */}
-        <div className="max-w-6xl mx-auto px-4 py-12 space-y-6 text-sm leading-relaxed">
-          <h2 className="text-2xl font-semibold text-white">About Us</h2>
-
-          <p>
+        <div className="max-w-5xl mx-auto px-4  sm:py-12 space-y-6 text-sm sm:text-base leading-relaxed">
+          <h2 className="text-xl sm:text-2xl font-semibold text-white">
+            About Us
+          </h2>
+          <p className="text-gray-300">
             Mittal Catering Ajmer is a respected and trusted name in the
             catering industry, proudly serving Ajmer and surrounding areas since
             1983. With over four decades of experience, we have built a strong
@@ -90,6 +99,7 @@ const page = () => {
           </p>
         </div>
       </section>
+      <WhyChooseMittalCatering/>
       <Footer />
     </>
   );

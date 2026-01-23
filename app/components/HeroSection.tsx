@@ -92,7 +92,7 @@ export default function HeroSection() {
         <div className="relative w-full h-[320px] sm:h-[380px] lg:h-[520px] rounded-2xl overflow-hidden shadow-2xl">
           {/* FOOD IMAGE (UNSPLASH) */}
           <Image
-            src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092"
+            src="https://res.cloudinary.com/dhxo0zx5u/image/upload/v1769173909/hero_section_qcbx0a.png"
             alt="Premium catering food presentation by Mittal Catering"
             fill
             priority

@@ -18,7 +18,7 @@ export default function AboutHomeSection() {
             className="relative w-full h-[260px] sm:h-[320px] lg:h-[420px] rounded-2xl overflow-hidden shadow-2xl"
           >
             <Image
-              src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092"
+              src="https://res.cloudinary.com/dhxo0zx5u/image/upload/v1769174821/Home_page_rllunz.png"
               alt="Traditional vegetarian sweets and catering by Mittal Catering Ajmer"
               fill
               className="object-cover"

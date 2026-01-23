@@ -162,19 +162,19 @@ export default function CheckoutClient() {
                       className="rounded-lg object-cover"
                     />
                     <div className="flex-1">
-                      <h3 className="text-white font-semibold">{i.name}</h3>
+                      <h3 className="text-white text-sm sm:text-md md:text-lg font-semibold">{i.name}</h3>
                       <p className="text-white/60 text-sm">₹{i.price}</p>
-                      <div className="flex items-center gap-3 mt-2">
+                      <div className="flex items-center gap-3 mt-4">
                         <button
                           onClick={() => dispatch(decreaseQty(i._id))}
-                          className="w-8 h-8 bg-primary rounded-full"
+                          className="w-6 h-6 bg-primary rounded-full"
                         >
                           −
                         </button>
                         <span className="text-white font-bold">{i.qty}</span>
                         <button
                           onClick={() => dispatch(increaseQty(i._id))}
-                          className="w-8 h-8 bg-primary rounded-full"
+                          className="w-6 h-6 bg-primary rounded-full"
                         >
                           +
                         </button>

@@ -86,16 +86,13 @@ export default function Navbar() {
       {/* MOBILE MENU */}
       {mobileOpen && (
         <div className="lg:hidden bg-muted px-6 py-5 text-sm space-y-4">
-          {/* BASIC LINKS */}
-          <MobileLink href="/" close={() => setMobileOpen(false)}>
-            Home
-          </MobileLink>
           <MobileLink href="/menu" close={() => setMobileOpen(false)}>
             Menu
           </MobileLink>
           <MobileLink href="/about-us" close={() => setMobileOpen(false)}>
             About Us
           </MobileLink>
+          <MobileLink href="/group-order-inquiry">Group Order Inquiry</MobileLink>
           <MobileLink href="/contact-us" close={() => setMobileOpen(false)}>
             Contact
           </MobileLink>
