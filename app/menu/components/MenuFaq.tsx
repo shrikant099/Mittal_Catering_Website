@@ -2,7 +2,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-
 import { addToCart, decreaseQty, increaseQty } from "@/features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategoryItems } from "@/features/menuPublic/menuSlicePublic";

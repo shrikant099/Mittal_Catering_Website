@@ -21,7 +21,9 @@ export const metadata: Metadata = {
   description:
     "Mittal Catering is one of India’s Top Event Caterers specializing in offering best event catering services for all occasions across Rajasthan, India.",
   icons: {
-    icon: "/mittals-logo.ico",
+    icon: "/icon.png",
+    shortcut: "/favicon.ico",
+    apple: "/apple-icon.png",
   },
 };
 
@@ -37,7 +39,7 @@ export default function RootLayout({
       >
         <Providers>
           {children}
-          <CartPopupBar/>
+          <CartPopupBar />
           <Toaster position="top-center" reverseOrder={false} />
         </Providers>
       </body>

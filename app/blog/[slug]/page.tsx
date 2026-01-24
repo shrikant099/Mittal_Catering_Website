@@ -34,7 +34,9 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function BlogPage({ params }: PageProps) {
   const { slug } = await params;
 
+  // Db Connect 
   await dbConnect();
+  // Find Blog
   const blog = await Blog.findOne({ slug });
 
   if (!blog) return notFound();

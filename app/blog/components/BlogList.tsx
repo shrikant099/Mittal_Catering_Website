@@ -16,7 +16,6 @@ export default async function BlogList() {
   return (
     <div className="space-y-6">
       {blogs.map((blog: any) => {
-        // 👇 TipTap JSON → HTML
         const html = generateHTML(blog.content, [StarterKit]);
 
         return (

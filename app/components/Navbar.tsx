@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { ChevronDown, ChevronUp, ShoppingCart } from "lucide-react";
@@ -15,13 +16,30 @@ export default function Navbar() {
 
   return (
     <header className="bg-[#0B0B0B] text-white sticky top-0 z-50">
-      <nav className="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto py-15 px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* LOGO */}
-        <Link
-          href="/"
-          className="text-lg text-white lg:text-xl font-bold text-primary"
-        >
-          Mittal Catering
+        <Link href="/" className="flex mt-4 items-center">
+          <div
+            className="
+      relative
+      w-[200px] h-[94px]
+      sm:w-[250px] sm:h-[118px]
+      lg:w-[250px] lg:h-[136px]
+    "
+          >
+            <Image
+              src="https://res.cloudinary.com/dhxo0zx5u/image/upload/v1769262242/Mittal_Logo__2_-removebg-preview_b6he9g.png"
+              alt="Mittal Catering Logo"
+              fill
+              priority
+              className="
+        object-contain
+        transition-all duration-300 ease-in-out
+        hover:scale-105
+        hover:brightness-110
+      "
+            />
+          </div>
         </Link>
 
         {/* DESKTOP MENU */}
@@ -92,7 +110,9 @@ export default function Navbar() {
           <MobileLink href="/about-us" close={() => setMobileOpen(false)}>
             About Us
           </MobileLink>
-          <MobileLink href="/group-order-inquiry">Group Order Inquiry</MobileLink>
+          <MobileLink href="/group-order-inquiry">
+            Group Order Inquiry
+          </MobileLink>
           <MobileLink href="/contact-us" close={() => setMobileOpen(false)}>
             Contact
           </MobileLink>

@@ -13,9 +13,7 @@ export const metadata: Metadata = {
 };
 
 async function getCategories() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/categories`, {
-    cache: "no-store",
-  });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/categories`);
 
   return res.json();
 }
@@ -29,7 +27,7 @@ export default async function MenuPage() {
       <AnnouncementBar />
       <Navbar />
       <main className="w-full max-w-5xl mx-auto px-4 py-10 overflow-x-hidden">
-      <h1 className="text-4xl font-bold mb-8 text-center">
+        <h1 className="text-4xl font-bold mb-8 text-center">
           Mittal Catering Menu
         </h1>
 
