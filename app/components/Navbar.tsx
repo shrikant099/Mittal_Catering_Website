@@ -24,7 +24,7 @@ export default function Navbar() {
       relative
       w-[200px] h-[94px]
       sm:w-[250px] sm:h-[118px]
-      lg:w-[250px] lg:h-[136px]
+      lg:w-[115px] lg:h-[136px]
     "
           >
             <Image

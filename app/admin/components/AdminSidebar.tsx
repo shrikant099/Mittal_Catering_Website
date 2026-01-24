@@ -42,7 +42,7 @@ export default function AdminSidebar() {
     });
     if (response.ok) {
       toast.success("Logged out successfully");
-      router.push("/login");
+      router.push("/");
     }
   };
 
