@@ -52,10 +52,12 @@ const MENU_ITEMS = [
 ];
 
 export default function MenuSection() {
-  const cart = useSelector((s: any) => s.cart.items);
+  const topSixMenuItems = useSelector((menu: any) => {});
+  const cartRaw = useSelector((s: any) => s.cart?.items);
+  const cart = Array.isArray(cartRaw) ? cartRaw : [];
+
   const dispatch = useDispatch();
-  const inCart = (id: string) =>
-    cart.find((i: { _id: string }) => i._id === id);
+  const inCart = (id: string) => cart.find((i: any) => i._id === id);
 
   return (
     <section className="bg-background py-16 sm:py-20 lg:py-28">

@@ -19,10 +19,16 @@ export default function CartPopupBar() {
   if (pathname === "/checkout") return null;
   if (pathname === "/thank-you") return null;
 
-  const cart = useSelector((s: any) => s.cart.items);
+  const cartRaw = useSelector((s: any) => s.cart?.items);
+  const cart = Array.isArray(cartRaw) ? cartRaw : [];
 
-  const totalQty = cart.reduce((a: number, b: any) => a + b.qty, 0);
-  const totalPrice = cart.reduce((a: number, b: any) => a + b.qty * b.price, 0);
+  console.log("Cart ", cart);
+  let totalQty;
+  let totalPrice;
+  if (Array.isArray(cart)) {
+    totalQty = cart.reduce((a: number, b: any) => a + b.qty, 0);
+    totalPrice = cart.reduce((a: number, b: any) => a + b.qty * b.price, 0);
+  }
 
   if (!totalQty) return null;
 

@@ -15,13 +15,25 @@ export default function AboutHomeSection() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="relative w-full h-[260px] sm:h-[320px] lg:h-[420px] rounded-2xl overflow-hidden shadow-2xl"
+            className=" relative
+  w-full
+  rounded
+  aspect-[4/3] 
+  sm:aspect-[16/11]
+  lg:aspect-[5/4]
+  rounded-2xl
+  overflow-hidden
+  shadow-2xl"
           >
             <Image
               src="https://res.cloudinary.com/dhxo0zx5u/image/upload/v1769174821/Home_page_rllunz.png"
               alt="Traditional vegetarian sweets and catering by Mittal Catering Ajmer"
               fill
-              className="object-cover"
+              className="object-contain
+      bg-black
+      p-2
+      transition-transform duration-700
+      hover:scale-105"
             />
           </motion.div>
 

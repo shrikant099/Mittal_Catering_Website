@@ -10,9 +10,13 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [policyOpen, setPolicyOpen] = useState(false);
-  const count = useSelector((s: any) =>
-    s.cart.items.reduce((a: any, b: { qty: any }) => a + b.qty, 0)
-  );
+
+  // Cart Item count
+  const count = useSelector((s: any) => {
+    const items = s.cart?.items;
+    if (!Array.isArray(items)) return 0;
+    return items.reduce((a: number, b: any) => a + b.qty, 0);
+  });
 
   return (
     <header className="bg-[#0B0B0B] text-white sticky top-0 z-50">
@@ -22,13 +26,13 @@ export default function Navbar() {
           <div
             className="
       relative
-      w-[200px] h-[94px]
+      w-[90px] h-[94px]
       sm:w-[250px] sm:h-[118px]
       lg:w-[115px] lg:h-[136px]
     "
           >
             <Image
-              src="https://res.cloudinary.com/dhxo0zx5u/image/upload/v1769262242/Mittal_Logo__2_-removebg-preview_b6he9g.png"
+              src="https://res.cloudinary.com/dhxo0zx5u/image/upload/v1770209721/file_00000000bc3471faaf1a3ddbff533044-removebg-preview_wsolpv.png"
               alt="Mittal Catering Logo"
               fill
               priority

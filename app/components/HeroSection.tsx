@@ -49,7 +49,6 @@ export default function HeroSection() {
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-
             viewport={{ once: true }}
             variants={{
               hidden: { opacity: 0, y: 30 },
@@ -89,18 +88,35 @@ export default function HeroSection() {
         </div>
 
         {/* ================= RIGHT IMAGE ================= */}
-        <div className="relative w-full h-[320px] sm:h-[380px] lg:h-[520px] rounded-2xl overflow-hidden shadow-2xl">
-          {/* FOOD IMAGE (UNSPLASH) */}
+        <div
+          className="
+  relative
+  w-full
+  rounded
+  aspect-[4/3] 
+  sm:aspect-[16/11]
+  lg:aspect-[5/4]
+  rounded-2xl
+  overflow-hidden
+  shadow-2xl
+"
+        >
           <Image
             src="https://res.cloudinary.com/dhxo0zx5u/image/upload/v1769173909/hero_section_qcbx0a.png"
             alt="Premium catering food presentation by Mittal Catering"
             fill
             priority
-            className="object-cover scale-105 hover:scale-110 transition-transform duration-700"
+            className="
+      object-contain
+      bg-black
+      p-2
+      transition-transform duration-700
+      hover:scale-105
+    "
           />
 
-          {/* DARK GRADIENT OVERLAY */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          {/* overlay optional */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
         </div>
       </div>
     </section>
