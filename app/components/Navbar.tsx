@@ -73,9 +73,6 @@ export default function Navbar() {
               <DropdownLink href="/services/food-delivery-trains">
                 Food Delivery in Trains
               </DropdownLink>
-              <DropdownLink href="/services/food-delivery-buses">
-                Food Delivery in Buses
-              </DropdownLink>
             </Dropdown>
           </li>
 
@@ -166,12 +163,6 @@ export default function Navbar() {
                   close={() => setMobileOpen(false)}
                 >
                   Food Delivery in Trains
-                </MobileLink>
-                <MobileLink
-                  href="/services/food-delivery-buses"
-                  close={() => setMobileOpen(false)}
-                >
-                  Food Delivery in Buses
                 </MobileLink>
               </div>
             )}
