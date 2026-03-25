@@ -47,9 +47,9 @@ export async function POST(req: NextRequest) {
     }
 
     const orderId =
-      paymentMethod === PaymentMethod.ONLINE && razorpay_order_id
-        ? razorpay_order_id
-        : generateInternalOrderId();
+    paymentMethod === PaymentMethod.ONLINE
+      ? `RP-${razorpay_payment_id}`
+      : generateInternalOrderId();
 
         const order = await Order.create({
             orderId:orderId,
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error("CREATE ORDER ERROR:", error);
     return NextResponse.json(
-      { success: false, message: "Failed to create order" },
+      { success: false, message: error.message },
       { status: 500 }
     );
   }

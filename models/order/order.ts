@@ -41,7 +41,7 @@ const CustomerSchema = new Schema<ICustomerDetails>(
         trainNumber: { type: String, required: true, match: [/^\d{5}$/, "Invalid train number"] },
         pnr: { type: String, required: true, match: [/^\d{10}$/, "Invalid PNR"] },
         coach: { type: String, required: true },
-        seat: { type: String, required: true },
+        seat: { type: Number, required: true },
         instructions: { type: String, maxlength: 150 },
     },
     { _id: false }

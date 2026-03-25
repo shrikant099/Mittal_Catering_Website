@@ -39,7 +39,7 @@ export interface ICustomerDetails {
     trainNumber: string;
     pnr: string;
     coach: string;
-    seat: string;
+    seat: number;
     instructions?: string;
 }
 
