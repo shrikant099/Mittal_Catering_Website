@@ -120,95 +120,81 @@ export default function CheckoutClient() {
 
   const payRazorpay = useCallback(async () => {
     try {
-      console.log(`Total amount to be paid: ₹${total}`);
+      const customerData = {
+        fullName: form.name,
+        mobileNumber: form.phone,
+        trainNumber: form.train,
+        pnr: form.pnr,
+        coach: form.coach,
+        seat: form.seat,
+        instructions: form.instructions,
+      };
+  
+      const orderItems = items;
+      const orderSubtotal = subtotal;
+      const orderGst = gst;
+      const orderTotal = total;
+  
       const res = await fetch("/api/razorpay/create-order", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: total }),
       });
-
+  
       const order = await res.json();
-
+  
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: order.amount,
         currency: "INR",
-        name: "Mittal Catering",
-        description: "Food Order Payment",
         order_id: order.id,
+        name: "Mittal Catering",
+  
         handler: async function (response: any) {
-          console.log("Payment Response:", response);
-
           const verifyRes = await fetch("/api/razorpay/verify-payment", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(response),
           });
-
+  
           const verifyData = await verifyRes.json();
-          console.log("Verify Response:", verifyData);
-
+  
           if (verifyData.success) {
-            // create order in DB after payment success
             const orderRes = await fetch("/api/order", {
               method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
+              headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                customer: {
-                  fullName: form.name,
-                  mobileNumber: form.phone,
-                  trainNumber: form.train,
-                  pnr: form.pnr,
-                  coach: form.coach,
-                  seat: form.seat,
-                  instructions: form.instructions,
-                },
-                items,
-                subtotal,
-                gst,
-                total,
+                customer: customerData,
+                items: orderItems,
+                subtotal: orderSubtotal,
+                gst: orderGst,
+                total: orderTotal,
                 paymentMethod: "ONLINE",
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
               }),
             });
-            
+  
             const data = await orderRes.json();
+  
             if (!orderRes.ok) {
-              alert(data.message || "Order failed");
+              alert(data.message);
               return;
             }
-            console.log("Order Response:", data);
-
+  
             dispatch(clearCart());
             window.location.href = `/thank-you?orderId=${data.data.orderId}`;
-          } else {
-            alert("Payment verification failed");
           }
         },
-        prefill: {
-          name: form.name,
-          contact: form.phone,
-        },
-        theme: {
-          color: "#ff6b00",
-        },
       };
-
+  
       const rzp = new (window as any).Razorpay(options);
       rzp.open();
     } catch (error: any) {
-      alert(error.message || "Payment failed");
-      console.error("Razorpay Error:", error);
+      alert(error.message);
     }
-  }, []);
+  }, [form, items, subtotal, gst, total]);
 
   // Strict validation for enabling Place Order
   const isFormValid =
