@@ -33,12 +33,13 @@ export async function POST(req: NextRequest) {
 
     if (
       !customer ||
-      !items?.length ||
-      !subtotal ||
-      !gst ||
-      !total ||
+      !items ||
+      items.length === 0 ||
+      subtotal == null ||
+      gst == null ||
+      total == null ||
       !paymentMethod
-    ) {
+    ){
       return NextResponse.json(
         { success: false, message: "Missing fields" },
         { status: 400 }
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
         : generateInternalOrderId();
 
         const order = await Order.create({
-            orderId: generateInternalOrderId(),
+            orderId:orderId,
             customer,
             items,
             subtotal,
