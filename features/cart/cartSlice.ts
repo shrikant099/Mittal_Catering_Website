@@ -7,6 +7,8 @@ interface CartItem {
     qty: number;
 }
 
+
+
 interface CartState {
     items: CartItem[] | any;
 }
