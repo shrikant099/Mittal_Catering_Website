@@ -18,5 +18,5 @@ export async function POST(request: Request) {
     });
     console.log("Order created amount:", order.amount);
 
-    return NextResponse.json({ orderId: order.id });
+    return NextResponse.json(order)
 }
