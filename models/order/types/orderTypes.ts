@@ -54,6 +54,12 @@ export interface IOrder extends Document {
     status: OrderStatus;
     paymentStatus: PaymentStatus;
     paymentMethod: PaymentMethod;
+
+    // Razorpay Fields
+    razorpay_order_id?: string;
+    razorpay_payment_id?: string;
+    razorpay_signature?: string;
+    
     createdAt: Date; // date + time
     updatedAt: Date;
 }

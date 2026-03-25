@@ -28,6 +28,7 @@ const OrderItemSchema = new Schema<IOrderItem>(
         category: {
             type: String
         },
+        
     },
     { _id: false }
 )
@@ -93,6 +94,15 @@ const OrderSchema = new Schema<IOrder>(
             enum: Object.values(PaymentMethod),
             required: true,
             index: true,
+        },
+        razorpay_order_id: {
+            type: String,
+        },
+        razorpay_payment_id: {
+            type: String,
+        },
+        razorpay_signature: {
+            type: String,
         },
     },
     {
