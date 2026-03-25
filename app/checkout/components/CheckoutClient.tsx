@@ -120,6 +120,7 @@ export default function CheckoutClient() {
 
   const payRazorpay = useCallback(async() => {
       try {
+        console.log(`Total amount to be paid: ₹${total}`);
         const res = await fetch("/api/razorpay/create-order", {
           method: "POST",
           headers: {
