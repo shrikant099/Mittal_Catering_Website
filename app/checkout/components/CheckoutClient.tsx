@@ -118,8 +118,84 @@ export default function CheckoutClient() {
     }
   }, [form, items, subtotal, gst, total, dispatch]);
 
-  const payRazorpay = useCallback(() => {
-    alert("Razorpay selected. Next: open Razorpay flow.");
+  const payRazorpay = useCallback(async() => {
+      try {
+        const res = await fetch("/api/razorpay/create-order", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ amount: total }),
+        });
+
+        const order = await res.json();
+
+        const options = {
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+          amount: order.amount,
+          currency: "INR",
+          name: "Mittal Catering",
+          description: "Food Order Payment",
+          order_id: order.id,
+          handler: async function (response: any) {
+            const verifyRes = await fetch("/api/razorpay/verify-payment", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(response),
+            });
+    
+            const verifyData = await verifyRes.json();
+    
+            if (verifyData.success) {
+              // create order in DB after payment success
+              const orderRes = await fetch("/api/order", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  customer: {
+                    fullName: form.name,
+                    mobileNumber: form.phone,
+                    trainNumber: form.train,
+                    pnr: form.pnr,
+                    coach: form.coach,
+                    seat: form.seat,
+                    instructions: form.instructions,
+                  },
+                  items,
+                  subtotal,
+                  gst,
+                  total,
+                  paymentMethod: "ONLINE",
+                  paymentId: response.razorpay_payment_id,
+                }),
+              });
+    
+              const data = await orderRes.json();
+              dispatch(clearCart());
+              window.location.href = `/thank-you?orderId=${data.data.orderId}`;
+            } else {
+              alert("Payment verification failed");
+            }
+          },
+          prefill: {
+            name: form.name,
+            contact: form.phone,
+          },
+          theme: {
+            color: "#ff6b00",
+          },
+        };
+
+        const rzp = new (window as any).Razorpay(options);
+        rzp.open();
+      } catch (error: any) {
+          alert(error.message || "Payment failed");
+          console.error("Razorpay Error:", error);
+      }
   }, []);
 
   // Strict validation for enabling Place Order
