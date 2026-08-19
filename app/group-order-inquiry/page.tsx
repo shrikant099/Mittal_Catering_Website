@@ -5,6 +5,7 @@ import Image from "next/image";
 import Footer from "../components/Footer";
 import AnnouncementBar from "../components/AnnouncementBar";
 import Navbar from "../components/Navbar";
+import InquiryForm from "../components/InquiryForm";
 
 export const metadata: Metadata = {
   title: "Group Order Enquiry for Train Food in Ajmer | Mittal Catering Ajmer",
@@ -115,31 +116,10 @@ export default function GroupOrderEnquiryPage() {
               <p className="text-white/70 mb-6">
                 Fill the form and our team will contact you shortly.
               </p>
-              <form className="space-y-4">
-                <input
-                  name="name"
-                  required
-                  placeholder="Your Name"
-                  className="w-full px-4 py-3 rounded-xl bg-black border border-white/10 focus:border-orange-500 outline-none"
-                />
-                <input
-                  name="phone"
-                  required
-                  placeholder="Mobile Number"
-                  pattern="[0-9]{10}"
-                  className="w-full px-4 py-3 rounded-xl bg-black border border-white/10 focus:border-orange-500 outline-none"
-                />
-                <textarea
-                  name="message"
-                  required
-                  placeholder="Tell us about your group order requirement…"
-                  rows={5}
-                  className="w-full px-4 py-3 rounded-xl bg-black border border-white/10 focus:border-orange-500 outline-none"
-                />
-                <button className="w-full bg-orange-500 hover:bg-orange-600 text-black font-bold py-4 rounded-xl">
-                  Submit Enquiry
-                </button>
-              </form>
+              <InquiryForm
+                source="Group Order Enquiry Page"
+                className="space-y-4"
+              />
             </div>
             <div className="text-white/80">
               <h2 className="text-2xl font-bold mb-4">

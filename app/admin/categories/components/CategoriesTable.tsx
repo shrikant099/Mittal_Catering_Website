@@ -10,7 +10,7 @@ export default function CategoriesTable({ search, page }: any) {
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState<any | null>(null);
   const [del, setDel] = useState<any | null>(null);
-  const categories = useSelector((state: any) => state.category.list);
+  const categories = useSelector((state: any) => state.category.list) ?? [];
 
   return (
     <div>

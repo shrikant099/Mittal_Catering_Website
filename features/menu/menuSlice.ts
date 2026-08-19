@@ -8,7 +8,7 @@ const menuSlice = createSlice({
     name: "menu",
     initialState,
     reducers: {
-        setMenuItems(state, action: PayloadAction<any[]>) { state.list = action.payload; },
+        setMenuItems(state, action: PayloadAction<any[]>) { state.list = action.payload ?? []; },
         addMenuItem(state, action: PayloadAction<any>) { state.list.unshift(action.payload); },
         updateMenuItem(state, action: PayloadAction<any>) { state.list = state.list.map(i => i._id === action.payload._id ? action.payload : i); },
         deleteMenuItem(state, action: PayloadAction<string>) { state.list = state.list.filter(i => i._id !== action.payload); },

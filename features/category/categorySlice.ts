@@ -13,7 +13,7 @@ const categorySlice = createSlice({
     initialState,
     reducers: {
         setCategories(state, action: PayloadAction<any[]>) {
-            state.list = action.payload;
+            state.list = action.payload ?? [];
         },
         addCategory(state, action: PayloadAction<any>) {
             state.list.unshift(action.payload);

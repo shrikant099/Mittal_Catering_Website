@@ -3,6 +3,7 @@ import MenuFaq from "./components/MenuFaq";
 import Footer from "../components/Footer";
 import AnnouncementBar from "../components/AnnouncementBar";
 import Navbar from "../components/Navbar";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
 export const metadata: Metadata = {
   title: "Mittal Catering Menu | Fresh Vegetarian Catering in Ajmer",
@@ -13,7 +14,8 @@ export const metadata: Metadata = {
 };
 
 async function getCategories() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/categories`);
+  const baseUrl = await getBaseUrl();
+  const res = await fetch(`${baseUrl}/api/categories`, { cache: "no-store" });
 
   return res.json();
 }

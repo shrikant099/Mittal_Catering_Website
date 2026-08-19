@@ -10,7 +10,7 @@ import { updateMenuStatus } from "@/features/menu/menuSlice";
 import { toast } from "react-hot-toast";
 
 export default function MenuTable() {
-  const items = useSelector((s: any) => s.menu.list);
+  const items = useSelector((s: any) => s.menu.list) ?? [];
   const [add, setAdd] = useState(false);
   const [edit, setEdit] = useState<any | null>(null);
   const [del, setDel] = useState<any | null>(null);

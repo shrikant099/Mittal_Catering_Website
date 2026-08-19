@@ -1,8 +1,10 @@
 import StarterKit from "@tiptap/starter-kit";
 import { generateHTML } from "@tiptap/html";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
 async function getBlogs() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/blogs`, {
+  const baseUrl = await getBaseUrl();
+  const res = await fetch(`${baseUrl}/api/blogs`, {
     cache: "no-store",
   });
 

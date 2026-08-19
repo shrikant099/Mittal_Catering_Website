@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import AdminMenuClient from "./components/AdminMenuClient";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
 export const metadata = {
   title: "Menu Items | Admin",
@@ -16,8 +17,9 @@ export default async function MenuPage({
   const search = params.search || "";
 
   const cookieHeader = (await cookies()).toString();
+  const baseUrl = await getBaseUrl();
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/menu?search=${search}&page=${page}&limit=10`,
+    `${baseUrl}/api/menu?search=${search}&page=${page}&limit=10`,
     { headers: { Cookie: cookieHeader }, cache: "no-store" }
   );
   const data = await res.json();

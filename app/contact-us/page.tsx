@@ -4,6 +4,7 @@ import Link from "next/link";
 import AnnouncementBar from "../components/AnnouncementBar";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import InquiryForm from "../components/InquiryForm";
 
 export const metadata: Metadata = {
   title: "Contact Mittal Catering Ajmer | Guaranteed Train Food Delivery",
@@ -85,23 +86,7 @@ export default function ContactUsPage() {
             <h2 className="text-2xl font-bold text-primary mb-6">
               Send Us an Enquiry
             </h2>
-            <form className="grid sm:grid-cols-2 gap-4">
-              <input
-                placeholder="Your Name"
-                className="bg-black border border-white/10 p-3 rounded-xl"
-              />
-              <input
-                placeholder="Mobile Number"
-                className="bg-black border border-white/10 p-3 rounded-xl"
-              />
-              <textarea
-                placeholder="Your Message / Requirement"
-                className="bg-black border border-white/10 p-3 rounded-xl sm:col-span-2 h-32"
-              />
-              <button className="sm:col-span-2 bg-primary text-black py-4 rounded-xl font-bold hover:opacity-90">
-                Submit Enquiry
-              </button>
-            </form>
+            <InquiryForm source="Contact Us Page" />
           </div>
         </section>
 

@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
 export const metadata: Metadata = {
   title: "Order Placed Successfully | Mittal Catering",
@@ -9,8 +10,9 @@ export const metadata: Metadata = {
 };
 
 async function getOrder(orderId: string) {
+  const baseUrl = await getBaseUrl();
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/order/${orderId}`,
+    `${baseUrl}/api/order/${orderId}`,
     { cache: "no-store" }
   );
   if (!res.ok) return null;

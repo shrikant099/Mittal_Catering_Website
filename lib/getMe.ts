@@ -1,9 +1,11 @@
 import { cookies } from "next/headers";
+import { getBaseUrl } from "./getBaseUrl";
 
 export async function getMe() {
     const cookie = (await cookies()).toString();
+    const baseUrl = await getBaseUrl();
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/auth/me`, {
+    const res = await fetch(`${baseUrl}/api/auth/me`, {
         headers: {
             Cookie: cookie,
         },

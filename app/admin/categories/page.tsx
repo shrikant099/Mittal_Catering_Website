@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import AdminCategoriesClient from "./components/AdminCategoriesClient";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 export const metadata = {
   title: "Categories Management | Admin",
   description: "Manage food categories – create, search and manage categories",
@@ -16,9 +17,10 @@ export default async function CategoriesPage({
 
   const cookieStore = await cookies();
   const cookieHeader = cookieStore.toString();
+  const baseUrl = await getBaseUrl();
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/categories?search=${search}&page=${page}&limit=10`,
+    `${baseUrl}/api/categories?search=${search}&page=${page}&limit=10`,
     {
       headers: { Cookie: cookieHeader },
       cache: "no-store",
