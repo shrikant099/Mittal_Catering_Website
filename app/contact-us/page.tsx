@@ -10,13 +10,13 @@ export const metadata: Metadata = {
   title: "Contact Mittal Catering Ajmer | Guaranteed Train Food Delivery",
   description:
     "Contact Mittal Catering Ajmer for guaranteed train food delivery, bulk group orders, wedding & corporate catering. Call or send enquiry for fast response.",
-  alternates: { canonical: "https://mittalcatering.in/contact-us" },
+  alternates: { canonical: "https://mittalskitchen.com/contact-us" },
   robots: { index: true, follow: true },
   openGraph: {
     title: "Contact Mittal Catering Ajmer",
     description:
       "Get in touch with Mittal Catering Ajmer for train food delivery and event catering.",
-    url: "https://mittalcatering.in/contact-us",
+    url: "https://mittalskitchen.com/contact-us",
     siteName: "Mittal Catering Ajmer",
     type: "website",
   },

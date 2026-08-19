@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "https://mittalskitchen.com"
+  ),
   title:
     "Best Caterers in India | Top Event Caterers in Rajasthan, India - Mittal Catering",
   description:

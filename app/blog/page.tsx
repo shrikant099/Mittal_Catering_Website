@@ -7,6 +7,8 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import AnnouncementBar from "../components/AnnouncementBar";
 
+export const dynamic = "force-dynamic";
+
 export default async function BlogsPage() {
   await dbConnect();
   const blogs = await Blog.find().sort({ createdAt: -1 });
