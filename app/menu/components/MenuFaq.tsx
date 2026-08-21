@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { UtensilsCrossed } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { addToCart, decreaseQty, increaseQty } from "@/features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -48,9 +49,21 @@ export default function MenuFaq({
   const getItems = (id: string) =>
     cachedItemsByCategory[id] ?? itemsByCategory[id] ?? [];
 
+  // Only show categories that actually have items on the customer-facing
+  // menu — an empty accordion is just clutter, not something to order from.
+  const visibleCategories = categories.filter((c) => getItems(c._id).length > 0);
+
+  if (visibleCategories.length === 0) {
+    return (
+      <p className="text-white/40 text-center py-16">
+        Menu is being updated — please check back shortly.
+      </p>
+    );
+  }
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      {categories.map((c) => {
+    <div className="max-w-4xl mx-auto space-y-5">
+      {visibleCategories.map((c) => {
         const items = getItems(c._id);
         const isOpen = openIds.has(c._id);
 
@@ -58,31 +71,33 @@ export default function MenuFaq({
           <motion.div
             key={c._id}
             layout
-            className="bg-[#121212] border border-white/10 rounded-2xl overflow-hidden shadow-lg"
+            className="bg-[#141414] border border-white/[0.06] rounded-2xl overflow-hidden shadow-sm"
           >
             {/* HEADER */}
             <button
               onClick={() => toggle(c._id)}
-              className="w-full flex items-center gap-5 p-5 text-left hover:bg-white/5 transition"
+              className="w-full flex items-center gap-4 p-4 sm:p-5 text-left hover:bg-white/[0.03] transition"
             >
               <Image
                 src={c.thumbnail}
                 alt={c.name}
-                width={70}
-                height={70}
-                className="rounded-xl object-cover w-[70px] h-[70px]"
+                width={60}
+                height={60}
+                className="rounded-xl object-cover w-[56px] h-[56px] sm:w-[60px] sm:h-[60px] shrink-0 ring-1 ring-white/10"
               />
 
-              <div className="flex-1">
-                <h2 className="text-xl font-bold text-white">{c.name}</h2>
-                <p className="text-sm text-white/50">
+              <div className="flex-1 min-w-0">
+                <h2 className="text-lg sm:text-xl font-bold text-white truncate">
+                  {c.name}
+                </h2>
+                <p className="text-xs sm:text-sm text-white/40 mt-0.5">
                   {items.length} {items.length === 1 ? "item" : "items"}
                 </p>
               </div>
 
               <motion.span
                 animate={{ rotate: isOpen ? 180 : 0 }}
-                className="text-3xl text-primary"
+                className="text-2xl text-primary shrink-0"
               >
                 ⌄
               </motion.span>
@@ -96,24 +111,18 @@ export default function MenuFaq({
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.25, ease: "easeOut" }}
-                  className="px-6 pb-6 overflow-hidden"
+                  className="px-4 sm:px-6 pb-5 sm:pb-6 overflow-hidden"
                 >
-                  {items.length === 0 ? (
-                    <p className="text-white/40 text-sm text-center py-6">
-                      No items in this category yet.
-                    </p>
-                  ) : (
-                    <div className="space-y-4">
-                      {items.map((i: any) => (
-                        <MenuItemRow
-                          key={i._id}
-                          item={i}
-                          inCart={inCart}
-                          dispatch={dispatch}
-                        />
-                      ))}
-                    </div>
-                  )}
+                  <div className="space-y-3">
+                    {items.map((i: any) => (
+                      <MenuItemRow
+                        key={i._id}
+                        item={i}
+                        inCart={inCart}
+                        dispatch={dispatch}
+                      />
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -148,13 +157,19 @@ function MenuItemRow({
       "
     >
       <div className="flex gap-3 sm:gap-4">
-        <Image
-          src={item.image}
-          alt={item.name}
-          width={90}
-          height={90}
-          className="rounded-xl object-cover w-[74px] h-[74px] sm:w-[90px] sm:h-[90px] shrink-0 ring-1 ring-white/10"
-        />
+        {item.image ? (
+          <Image
+            src={item.image}
+            alt={item.name}
+            width={90}
+            height={90}
+            className="rounded-xl object-cover w-[74px] h-[74px] sm:w-[90px] sm:h-[90px] shrink-0 ring-1 ring-white/10"
+          />
+        ) : (
+          <div className="rounded-xl w-[74px] h-[74px] sm:w-[90px] sm:h-[90px] shrink-0 ring-1 ring-white/10 bg-white/5 flex items-center justify-center text-white/25">
+            <UtensilsCrossed size={26} />
+          </div>
+        )}
 
         <div className="flex-1 min-w-0 py-0.5">
           <h3 className="font-bold text-white leading-snug">{item.name}</h3>

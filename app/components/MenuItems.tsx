@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { UtensilsCrossed } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, decreaseQty, increaseQty } from "@/features/cart/cartSlice";
 
@@ -72,13 +73,19 @@ export default function MenuSection({ items = [] }: { items?: any[] }) {
               "
               >
                 {/* IMAGE */}
-                <div className="relative w-full h-36 sm:h-44 lg:h-48">
-                  <Image
-                    src={item.image}
-                    alt={`${item.name} by Mittal Catering`}
-                    fill
-                    className="object-cover"
-                  />
+                <div className="relative w-full h-36 sm:h-44 lg:h-48 bg-white/5">
+                  {item.image ? (
+                    <Image
+                      src={item.image}
+                      alt={`${item.name} by Mittal Catering`}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white/20">
+                      <UtensilsCrossed size={36} />
+                    </div>
+                  )}
                 </div>
 
                 {/* CONTENT */}

@@ -42,7 +42,7 @@ export default function AddMenuModal({ onClose }: { onClose: () => void }) {
 
     const form = new FormData(e.currentTarget);
     const file = form.get("image") as File;
-    if (!isAllowedImageType(file)) {
+    if (file && file.size > 0 && !isAllowedImageType(file)) {
       toast.error(ALLOWED_IMAGE_MESSAGE);
       return;
     }
@@ -205,7 +205,7 @@ export default function AddMenuModal({ onClose }: { onClose: () => void }) {
             />
           </Field>
 
-          <Field label="Image">
+          <Field label="Image (optional)">
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
@@ -229,7 +229,7 @@ export default function AddMenuModal({ onClose }: { onClose: () => void }) {
                   {preview ? "Change image" : "Upload image"}
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5">
-                  PNG, JPG or WEBP
+                  PNG, JPG or WEBP — not required
                 </p>
               </div>
             </button>
@@ -238,7 +238,6 @@ export default function AddMenuModal({ onClose }: { onClose: () => void }) {
               name="image"
               type="file"
               accept={ALLOWED_IMAGE_ACCEPT}
-              required
               onChange={onFile}
               className="hidden"
             />

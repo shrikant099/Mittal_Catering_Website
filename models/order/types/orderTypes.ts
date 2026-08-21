@@ -26,7 +26,7 @@ export enum PaymentMethod {
 export interface IOrderItem {
     _id: string; // menu item id
     name: string;
-    image: string;
+    image?: string;
     price: number;
     qty: number;
     category?: string;

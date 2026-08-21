@@ -29,21 +29,21 @@ export async function POST(req: Request) {
             ? 0
             : Number(formData.get("discount") || 0);
 
-        if (!name || !file || !category || !foodType || !price || !description) {
+        if (!name || !category || !foodType || !price || !description) {
             return NextResponse.json(
                 { success: false, message: "Missing required fields" },
                 { status: 400 }
             );
         }
 
-        if (!isAllowedImageType(file)) {
+        const hasImage = file && file.size > 0;
+
+        if (hasImage && !isAllowedImageType(file)) {
             return NextResponse.json(
                 { success: false, message: ALLOWED_IMAGE_MESSAGE },
                 { status: 400 }
             );
         }
-
-        console.log("DESC:", description);
 
         // Validate Category
         const categoryExists = await Category.exists({ _id: category });
@@ -56,25 +56,29 @@ export async function POST(req: Request) {
             )
         };
 
-        // upload image
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const uploadResult: any = await new Promise((resolve, reject) => {
-            cloudinary.uploader.upload_stream(
-                {
-                    folder: "mittal-website/food/superAdmin/menu",
-                    resource_type: "image",
-                },
-                (err, result) => {
-                    if (err) reject(err);
-                    resolve(result);
-                }
-            ).end(buffer);
-        });
+        // upload image (optional)
+        let imageUrl: string | undefined;
+        if (hasImage) {
+            const buffer = Buffer.from(await file.arrayBuffer());
+            const uploadResult: any = await new Promise((resolve, reject) => {
+                cloudinary.uploader.upload_stream(
+                    {
+                        folder: "mittal-website/food/superAdmin/menu",
+                        resource_type: "image",
+                    },
+                    (err, result) => {
+                        if (err) reject(err);
+                        resolve(result);
+                    }
+                ).end(buffer);
+            });
+            imageUrl = uploadResult.secure_url;
+        }
 
         // save menu item
         const item = await MenuItem.create({
             name,
-            image: uploadResult.secure_url,
+            image: imageUrl,
             category,
             foodType,
             price,

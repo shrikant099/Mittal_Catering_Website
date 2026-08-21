@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { clearCart, increaseQty, decreaseQty } from "@/features/cart/cartSlice";
 import Image from "next/image";
 import Link from "next/link";
+import { UtensilsCrossed } from "lucide-react";
 import Script from "next/script";
 
 export default function CheckoutClient() {
@@ -234,13 +235,19 @@ export default function CheckoutClient() {
                     key={i._id}
                     className="flex gap-4 items-center bg-[#1A1A1A] rounded-xl p-4"
                   >
-                    <Image
-                      src={i.image}
-                      alt={i.name}
-                      width={80}
-                      height={80}
-                      className="rounded-lg object-cover"
-                    />
+                    {i.image ? (
+                      <Image
+                        src={i.image}
+                        alt={i.name}
+                        width={80}
+                        height={80}
+                        className="rounded-lg object-cover w-20 h-20"
+                      />
+                    ) : (
+                      <div className="w-20 h-20 rounded-lg bg-white/5 flex items-center justify-center text-white/25 shrink-0">
+                        <UtensilsCrossed size={26} />
+                      </div>
+                    )}
                     <div className="flex-1">
                       <h3 className="text-white text-sm sm:text-md md:text-lg font-semibold">
                         {i.name}

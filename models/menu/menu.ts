@@ -30,7 +30,7 @@ export interface IMenuVariant {
  */
 export interface IMenuItem {
     name: string;
-    image: string; // Cloudinary URL
+    image?: string; // Cloudinary URL — optional
     category: Types.ObjectId;
     foodType: FoodType;
     price: number;
@@ -70,7 +70,7 @@ const MenuItemSchema = new Schema<IMenuItem>({
     },
     image: {
         type: String,
-        required: true, // Cloudinary image URL
+        required: false, // Cloudinary image URL — optional
     },
     category: {
         type: Schema.Types.ObjectId,
