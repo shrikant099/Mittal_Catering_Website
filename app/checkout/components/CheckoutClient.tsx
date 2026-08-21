@@ -144,7 +144,12 @@ export default function CheckoutClient() {
       });
   
       const order = await res.json();
-  
+
+      if (!res.ok || !order.id) {
+        alert(order.error || "Could not start payment. Please try again.");
+        return;
+      }
+
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: order.amount,
