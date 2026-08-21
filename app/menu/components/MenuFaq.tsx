@@ -138,170 +138,171 @@ function MenuItemRow({
   return (
     <div
       className="
-        flex flex-col sm:flex-row
-        sm:items-start
-        gap-3 sm:gap-4
-        bg-[#1A1A1A]
-        rounded-xl
-        p-4
-        hover:bg-white/5
+        bg-[#161616]
+        rounded-2xl
+        border border-white/[0.06]
+        p-4 sm:p-5
+        shadow-sm
+        hover:border-white/10
         transition
       "
     >
-      <Image
-        src={item.image}
-        alt={item.name}
-        width={90}
-        height={90}
-        className="rounded-xl object-cover self-start sm:self-auto"
-      />
+      <div className="flex gap-3 sm:gap-4">
+        <Image
+          src={item.image}
+          alt={item.name}
+          width={90}
+          height={90}
+          className="rounded-xl object-cover w-[74px] h-[74px] sm:w-[90px] sm:h-[90px] shrink-0 ring-1 ring-white/10"
+        />
 
-      <div className="flex-1 py-1 w-full">
-        <h3 className="font-bold text-white">{item.name}</h3>
-        <p className="text-sm text-white/60">{item.description}</p>
+        <div className="flex-1 min-w-0 py-0.5">
+          <h3 className="font-bold text-white leading-snug">{item.name}</h3>
+          {item.description && (
+            <p className="text-sm text-white/45 mt-0.5">
+              {item.description}
+            </p>
+          )}
 
-        {!hasVariants && (
-          <p className="text-primary font-bold mt-1">
-            {item.discount ? (
-              <>
-                <span className="line-through text-gray-400 mr-2">
-                  ₹{item.price}
-                </span>
-                <span className="text-green-400 font-semibold">
-                  ₹
-                  {Math.round(
-                    item.price - (item.price * item.discount) / 100
-                  )}
-                </span>
-              </>
-            ) : (
-              <span>₹{item.price}</span>
-            )}
-          </p>
-        )}
-
-        {hasVariants && (
-          <div className="mt-3 space-y-2">
-            {item.variants.map((v: any) => {
-              const variantId = `${item.name} (${v.label})`;
-              const finalPrice = v.discount
-                ? Math.round(v.price - (v.price * v.discount) / 100)
-                : v.price;
-              const cartEntry = inCart(variantId);
-
-              return (
-                <div
-                  key={v._id || v.label}
-                  className="flex items-center justify-between gap-3 bg-[#0f0f0f] rounded-lg px-3 py-2"
-                >
-                  <div>
-                    <p className="text-sm text-white/80">{v.label}</p>
-                    <p className="text-primary font-semibold text-sm">
-                      {v.discount ? (
-                        <>
-                          <span className="line-through text-gray-500 mr-1.5">
-                            ₹{v.price}
-                          </span>
-                          <span className="text-green-400">
-                            ₹{finalPrice}
-                          </span>
-                        </>
-                      ) : (
-                        <>₹{v.price}</>
+          {!hasVariants && (
+            <div className="flex items-center justify-between gap-3 mt-3">
+              <p className="text-primary font-bold">
+                {item.discount ? (
+                  <>
+                    <span className="line-through text-gray-500 mr-2 font-normal">
+                      ₹{item.price}
+                    </span>
+                    <span className="text-green-400">
+                      ₹
+                      {Math.round(
+                        item.price - (item.price * item.discount) / 100
                       )}
-                    </p>
-                  </div>
+                    </span>
+                  </>
+                ) : (
+                  <span>₹{item.price}</span>
+                )}
+              </p>
 
-                  {cartEntry ? (
-                    <div className="flex items-center gap-2 bg-black/40 border border-primary rounded-full px-2 h-9">
-                      <button
-                        onClick={() => dispatch(decreaseQty(variantId))}
-                        className="w-7 h-7 flex items-center justify-center rounded-full bg-primary text-black font-bold hover:scale-105 transition"
-                      >
-                        −
-                      </button>
-                      <span className="text-white text-sm font-semibold w-4 text-center">
-                        {cartEntry.qty}
-                      </span>
-                      <button
-                        onClick={() => dispatch(increaseQty(variantId))}
-                        className="w-7 h-7 flex items-center justify-center rounded-full bg-primary text-black font-bold hover:scale-105 transition"
-                      >
-                        +
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        dispatch(
-                          addToCart({
-                            _id: variantId,
-                            name: `${item.name} (${v.label})`,
-                            image: item.image,
-                            price: finalPrice,
-                            originalPrice: v.price,
-                          })
-                        )
-                      }
-                      className="h-9 px-4 rounded-full border border-primary text-primary text-xs font-semibold hover:bg-primary hover:text-black transition-all"
-                    >
-                      Add
-                    </button>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+              <AddControl
+                inCartEntry={inCart(item.name)}
+                onAdd={() =>
+                  dispatch(
+                    addToCart({
+                      ...item,
+                      _id: item.name,
+                      price: item.discount
+                        ? Math.round(
+                            item.price - (item.price * item.discount) / 100
+                          )
+                        : item.price,
+                      originalPrice: item.price,
+                    })
+                  )
+                }
+                onIncrease={() => dispatch(increaseQty(item.name))}
+                onDecrease={() => dispatch(decreaseQty(item.name))}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* SIMPLE-ITEM ADD TO CART */}
-      {!hasVariants && (
-        <div className="w-full sm:w-[130px] flex justify-end sm:justify-end">
-          {inCart(item.name) ? (
-            <div className="flex items-center justify-between w-full h-10 px-2 rounded-full bg-[#0f0f0f] border border-primary shadow-inner">
-              <button
-                onClick={() => dispatch(decreaseQty(item.name))}
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-primary text-black font-bold hover:scale-105 transition"
-              >
-                −
-              </button>
+      {hasVariants && (
+        <div className="mt-4 rounded-xl overflow-hidden border border-white/[0.06] divide-y divide-white/[0.06] bg-black/15">
+          {item.variants.map((v: any) => {
+            const variantId = `${item.name} (${v.label})`;
+            const finalPrice = v.discount
+              ? Math.round(v.price - (v.price * v.discount) / 100)
+              : v.price;
 
-              <span className="text-white font-semibold text-sm">
-                {inCart(item.name).qty}
-              </span>
-
-              <button
-                onClick={() => dispatch(increaseQty(item.name))}
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-primary text-black font-bold hover:scale-105 transition"
+            return (
+              <div
+                key={v._id || v.label}
+                className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-white/[0.03] transition"
               >
-                +
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() =>
-                dispatch(
-                  addToCart({
-                    ...item,
-                    _id: item.name,
-                    price: item.discount
-                      ? Math.round(
-                          item.price - (item.price * item.discount) / 100
-                        )
-                      : item.price,
-                    originalPrice: item.price,
-                  })
-                )
-              }
-              className="w-full h-10 rounded-full border border-primary text-primary text-sm font-semibold
-                 hover:bg-primary hover:text-black transition-all"
-            >
-              Add
-            </button>
-          )}
+                <div>
+                  <p className="text-sm text-white/85 font-medium">
+                    {v.label}
+                  </p>
+                  <p className="text-primary font-bold text-sm mt-0.5">
+                    {v.discount ? (
+                      <>
+                        <span className="line-through text-gray-500 mr-1.5 font-normal">
+                          ₹{v.price}
+                        </span>
+                        <span className="text-green-400">₹{finalPrice}</span>
+                      </>
+                    ) : (
+                      <>₹{v.price}</>
+                    )}
+                  </p>
+                </div>
+
+                <AddControl
+                  inCartEntry={inCart(variantId)}
+                  onAdd={() =>
+                    dispatch(
+                      addToCart({
+                        _id: variantId,
+                        name: `${item.name} (${v.label})`,
+                        image: item.image,
+                        price: finalPrice,
+                        originalPrice: v.price,
+                      })
+                    )
+                  }
+                  onIncrease={() => dispatch(increaseQty(variantId))}
+                  onDecrease={() => dispatch(decreaseQty(variantId))}
+                />
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
+  );
+}
+
+function AddControl({
+  inCartEntry,
+  onAdd,
+  onIncrease,
+  onDecrease,
+}: {
+  inCartEntry: any;
+  onAdd: () => void;
+  onIncrease: () => void;
+  onDecrease: () => void;
+}) {
+  if (inCartEntry) {
+    return (
+      <div className="flex items-center gap-3 bg-primary rounded-full px-1 h-9 shadow-sm shrink-0">
+        <button
+          onClick={onDecrease}
+          className="w-7 h-7 flex items-center justify-center rounded-full bg-white/90 text-primary font-bold hover:bg-white transition"
+        >
+          −
+        </button>
+        <span className="text-white text-sm font-bold w-4 text-center">
+          {inCartEntry.qty}
+        </span>
+        <button
+          onClick={onIncrease}
+          className="w-7 h-7 flex items-center justify-center rounded-full bg-white/90 text-primary font-bold hover:bg-white transition"
+        >
+          +
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={onAdd}
+      className="h-9 px-6 shrink-0 rounded-full bg-white text-primary text-xs font-bold uppercase tracking-wide shadow-sm border border-primary/25 hover:bg-primary hover:text-white hover:border-primary transition-all"
+    >
+      Add
+    </button>
   );
 }
