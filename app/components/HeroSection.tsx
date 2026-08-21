@@ -29,8 +29,8 @@ export default function HeroSection() {
             viewport={{ once: true }}
             className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-tight text-foreground"
           >
-            Best Catering Services in India for
-            <span className="text-primary"> Weddings & Events</span>
+            Best Food Restaurant For Train Delivery & Catering at
+            <span className="text-primary"> Ajmer</span>
           </motion.h1>
 
           <motion.p
@@ -57,10 +57,10 @@ export default function HeroSection() {
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4"
+            className="flex justify-center lg:justify-start pt-4"
           >
             <Link
-              href="/contact-us"
+              href="/menu"
               className="
                 bg-primary text-white
                 px-8 py-4 rounded-lg
@@ -69,20 +69,7 @@ export default function HeroSection() {
                 transition-all duration-300
               "
             >
-              Book Catering Now
-            </Link>
-
-            <Link
-              href="/menu"
-              className="
-                border border-white/20 text-white
-                px-8 py-4 rounded-lg
-                font-semibold tracking-wide
-                hover:border-primary hover:text-primary
-                transition-all duration-300
-              "
-            >
-              View Menu
+              Order Food
             </Link>
           </motion.div>
         </div>
