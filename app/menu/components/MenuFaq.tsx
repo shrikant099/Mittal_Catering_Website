@@ -169,7 +169,7 @@ function MenuItemRow({
         <div className="flex-1 min-w-0 py-0.5">
           <h3 className="font-bold text-white leading-snug">{item.name}</h3>
           {item.description && (
-            <p className="text-sm text-white/45 mt-0.5">
+            <p className="text-sm text-white/45 mt-0.5 leading-snug line-clamp-2">
               {item.description}
             </p>
           )}
