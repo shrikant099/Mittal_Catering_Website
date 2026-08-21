@@ -11,6 +11,16 @@ import MenuSection from "./components/MenuItems";
 import Navbar from "./components/Navbar";
 import WelcomeSection from "./components/WelcomeSection";
 import WhyChooseMittalCatering from "./components/WhyChooseMittalCatering";
+import { getBaseUrl } from "@/lib/getBaseUrl";
+
+async function getFeaturedMenuItems() {
+  const baseUrl = await getBaseUrl();
+  const res = await fetch(`${baseUrl}/api/menu?status=active&limit=6`, {
+    next: { revalidate: 300 },
+  });
+  const data = await res.json();
+  return Array.isArray(data?.data) ? data.data : [];
+}
 
 export const metadata = {
   title:
@@ -21,7 +31,9 @@ export const metadata = {
     "Best Caterers in India, Top Event Caterers in Rajasthan, Event Catering Services, Mittal Catering, Catering Services India, Wedding Catering Rajasthan, Corporate Event Catering, Party Catering Services, Catering Company India",
 };
 
-export default function Home() {
+export default async function Home() {
+  const featuredMenuItems = await getFeaturedMenuItems();
+
   return (
     <>
     <AnnouncementBar/>
@@ -30,7 +42,7 @@ export default function Home() {
      <main className="overflow-x-hidden">
         <HeroSection />
         <WelcomeSection />
-        <MenuSection />
+        <MenuSection items={featuredMenuItems} />
         <WhyChooseMittalCatering/>
         <AboutHomeSection/>
         <HowItWorks/>

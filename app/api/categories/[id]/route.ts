@@ -3,6 +3,7 @@ import { dbConnect } from "@/lib/dbConnect";
 import Category from "@/models/category/category";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
+import { ALLOWED_IMAGE_MESSAGE, isAllowedImageType } from "@/lib/imageValidation";
 
 // Update Category
 export async function PUT(
@@ -46,6 +47,13 @@ export async function PUT(
        *  Update image (if provided)
        */
         if (file) {
+            if (!isAllowedImageType(file)) {
+                return NextResponse.json(
+                    { success: false, message: ALLOWED_IMAGE_MESSAGE },
+                    { status: 400 }
+                );
+            }
+
             // 1️ delete old image from cloudinary
             if (category.thumbnail) {
                 const publicId = category.thumbnail

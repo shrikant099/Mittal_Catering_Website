@@ -29,5 +29,5 @@ export default async function CategoriesPage({
 
   const data = await res.json();
 
-  return <AdminCategoriesClient serverData={data.data} />;
+  return <AdminCategoriesClient serverData={data} />;
 }

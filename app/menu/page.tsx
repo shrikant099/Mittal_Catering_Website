@@ -15,14 +15,43 @@ export const metadata: Metadata = {
 
 async function getCategories() {
   const baseUrl = await getBaseUrl();
-  const res = await fetch(`${baseUrl}/api/categories`, { cache: "no-store" });
+  const res = await fetch(`${baseUrl}/api/categories?limit=100`, {
+    next: { revalidate: 60 },
+  });
+
+  return res.json();
+}
+
+async function getMenuItems() {
+  const baseUrl = await getBaseUrl();
+  const res = await fetch(`${baseUrl}/api/menu?status=active&limit=500`, {
+    next: { revalidate: 60 },
+  });
 
   return res.json();
 }
 
 export default async function MenuPage() {
-  const data = await getCategories();
-  const categories = Array.isArray(data?.data) ? data.data : [];
+  const [categoriesRes, menuRes] = await Promise.all([
+    getCategories(),
+    getMenuItems(),
+  ]);
+
+  const categories = Array.isArray(categoriesRes?.data)
+    ? categoriesRes.data
+    : [];
+  const menuItems = Array.isArray(menuRes?.data) ? menuRes.data : [];
+
+  // Pre-group items by category so the whole menu can render open,
+  // with no per-category fetch needed on the client.
+  const itemsByCategory: Record<string, any[]> = {};
+  for (const item of menuItems) {
+    const categoryId =
+      typeof item.category === "object" ? item.category?._id : item.category;
+    if (!categoryId) continue;
+    if (!itemsByCategory[categoryId]) itemsByCategory[categoryId] = [];
+    itemsByCategory[categoryId].push(item);
+  }
 
   return (
     <>
@@ -33,7 +62,7 @@ export default async function MenuPage() {
           Mittal Catering Menu
         </h1>
 
-        <MenuFaq categories={categories} />
+        <MenuFaq categories={categories} itemsByCategory={itemsByCategory} />
       </main>
       <Footer />
     </>

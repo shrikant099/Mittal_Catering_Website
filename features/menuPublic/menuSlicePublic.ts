@@ -15,8 +15,11 @@ const menuPublicSlice = createSlice({
         setCategoryItems(state, action) {
             state.itemsByCategory[action.payload.categoryId] = action.payload.items;
         },
+        hydrateItemsByCategory(state, action) {
+            state.itemsByCategory = { ...state.itemsByCategory, ...action.payload };
+        },
     },
 });
 
-export const { setCategoryItems } = menuPublicSlice.actions;
+export const { setCategoryItems, hydrateItemsByCategory } = menuPublicSlice.actions;
 export default menuPublicSlice.reducer;

@@ -3,20 +3,64 @@ import Image from "next/image";
 import AddMenuModal from "./AddMenuModal";
 import EditMenuModal from "./EditMenuModal";
 import DeleteMenuModal from "./DeleteMenuModal";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { updateMenuStatus } from "@/features/menu/menuSlice";
+import { setMenuItems, updateMenuStatus } from "@/features/menu/menuSlice";
 import { toast } from "react-hot-toast";
+import Pagination from "../../components/Pagination";
 
-export default function MenuTable() {
-  const items = useSelector((s: any) => s.menu.list) ?? [];
+const PAGE_SIZE = 10;
+
+export default function MenuTable({
+  initialPage = 1,
+  initialTotalPages = 1,
+}: {
+  initialPage?: number;
+  initialTotalPages?: number;
+}) {
+  const menuList = useSelector((s: any) => s.menu.list);
+  const items = Array.isArray(menuList) ? menuList : [];
   const [add, setAdd] = useState(false);
   const [edit, setEdit] = useState<any | null>(null);
   const [del, setDel] = useState<any | null>(null);
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
+  const [page, setPage] = useState(initialPage);
+  const [totalPages, setTotalPages] = useState(initialTotalPages);
+  const [loading, setLoading] = useState(false);
+  const isFirstRun = useRef(true);
+
   const dispatch = useDispatch();
+
+  // Fetch the requested page — skips the very first run since the server
+  // already provided page 1.
+  useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
+
+    let ignore = false;
+    (async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/menu?page=${page}&limit=${PAGE_SIZE}`);
+        const data = await res.json();
+        if (!ignore && data.success) {
+          dispatch(setMenuItems(data.data));
+          setTotalPages(data.meta?.totalPages ?? 1);
+        }
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    })();
+
+    return () => {
+      ignore = true;
+    };
+  }, [page, dispatch]);
 
   async function toggleStatus(item: any) {
     setLoadingId(item._id);
@@ -92,7 +136,12 @@ export default function MenuTable() {
                   </span>
                 </td>
                 <td>
-                  {i.discount ? (
+                  {i.variants?.length > 0 ? (
+                    <span>
+                      ₹{Math.min(...i.variants.map((v: any) => v.price))} – ₹
+                      {Math.max(...i.variants.map((v: any) => v.price))}
+                    </span>
+                  ) : i.discount ? (
                     <div>
                       <span className="line-through text-gray-400 mr-2">
                         ₹{i.price}
@@ -107,7 +156,11 @@ export default function MenuTable() {
                 </td>
 
                 <td>
-                  {i.discount ? (
+                  {i.variants?.length > 0 ? (
+                    <span className="px-2 py-1 rounded bg-orange-500/20 text-orange-400 text-xs font-semibold">
+                      {i.variants.length} variants
+                    </span>
+                  ) : i.discount ? (
                     <span className="px-2 py-1 bg-green-500/40 text-white font-bold">
                       {i.discount}% OFF
                     </span>
@@ -155,11 +208,34 @@ export default function MenuTable() {
             ))}
           </tbody>
         </table>
+
+        {items.length === 0 && (
+          <div className="py-16 text-center text-white/40">
+            {loading ? "Loading..." : "No menu items found."}
+          </div>
+        )}
+
+        {items.length > 0 && (
+          <div className="border-t border-white/10 px-4">
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onChange={setPage}
+              disabled={loading}
+            />
+          </div>
+        )}
       </div>
 
-      {add && <AddMenuModal onClose={() => setAdd(false)} />}
-      {edit && <EditMenuModal item={edit} onClose={() => setEdit(null)} />}
-      {del && <DeleteMenuModal item={del} onClose={() => setDel(null)} />}
+      <AnimatePresence>
+        {add && <AddMenuModal key="add" onClose={() => setAdd(false)} />}
+        {edit && (
+          <EditMenuModal key="edit" item={edit} onClose={() => setEdit(null)} />
+        )}
+        {del && (
+          <DeleteMenuModal key="delete" item={del} onClose={() => setDel(null)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

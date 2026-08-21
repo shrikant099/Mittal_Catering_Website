@@ -4,6 +4,8 @@ import Category from "@/models/category/category";
 import MenuItem, { FoodType, ItemStatus } from "@/models/menu/menu";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
+import { ALLOWED_IMAGE_MESSAGE, isAllowedImageType } from "@/lib/imageValidation";
+import { basePriceFromVariants, parseVariants } from "@/lib/menuVariants";
 
 // Update Menu
 export async function PUT(
@@ -42,9 +44,11 @@ export async function PUT(
         const price = formData.get("price");
         const discount = formData.get("discount");
         const status = formData.get("status") as ItemStatus | null;
+        const description = formData.get("description") as string | null;
         const file = formData.get("image") as File | null;
 
         if (name) updates.name = name.trim();
+        if (description) updates.description = description.trim();
         if (category) {
             const exists = await Category.exists({ _id: category });
             if (!exists) {
@@ -59,8 +63,23 @@ export async function PUT(
         if (foodType && Object.values(FoodType).includes(foodType)) {
             updates.foodType = foodType;
         }
-        if (price !== null) updates.price = Number(price);
-        if (discount !== null) updates.discount = Number(discount);
+        // Variants replace the simple price/discount fields when present.
+        const variantsRaw = formData.get("variants");
+        if (variantsRaw !== null) {
+            const variants = parseVariants(variantsRaw);
+            updates.variants = variants;
+
+            if (variants.length > 0) {
+                updates.price = basePriceFromVariants(variants);
+                updates.discount = 0;
+            } else {
+                if (price !== null) updates.price = Number(price);
+                if (discount !== null) updates.discount = Number(discount);
+            }
+        } else {
+            if (price !== null) updates.price = Number(price);
+            if (discount !== null) updates.discount = Number(discount);
+        }
 
         if (status && Object.values(ItemStatus).includes(status)) {
             updates.status = status;
@@ -70,6 +89,12 @@ export async function PUT(
     * Image update (Cloudinary replace)
     */
         if (file && file.size > 0) {
+            if (!isAllowedImageType(file)) {
+                return NextResponse.json(
+                    { success: false, message: ALLOWED_IMAGE_MESSAGE },
+                    { status: 400 }
+                );
+            }
 
             if (item.image) {
                 const publicId = item.image

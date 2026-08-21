@@ -1,4 +1,4 @@
-import { Schema, model, models, Types } from "mongoose";
+import { Schema, Types } from "mongoose";
 import mongoose from "mongoose"
 /**
  * ENUMS (safe & optimised)
@@ -13,6 +13,17 @@ export enum ItemStatus {
     DISABLED = "disabled",
 }
 
+/**
+ * A variant lets one menu item (e.g. "Jain Dal Tadka") offer multiple
+ * sizes/options (e.g. 250 ML, 500 ML, 650 ML) each with its own price,
+ * instead of duplicating the item under different names.
+ */
+export interface IMenuVariant {
+    _id?: Types.ObjectId;
+    label: string;
+    price: number;
+    discount: number;
+}
 
 /**
  * TypeScript Interface
@@ -24,9 +35,29 @@ export interface IMenuItem {
     foodType: FoodType;
     price: number;
     discount: number;
+    variants: IMenuVariant[];
     status: ItemStatus;
     description: string;
 }
+
+const MenuVariantSchema = new Schema<IMenuVariant>({
+    label: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    price: {
+        type: Number,
+        required: true,
+        min: 0,
+    },
+    discount: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 100,
+    },
+});
 
 /**
  * Mongoose Schema
@@ -63,6 +94,10 @@ const MenuItemSchema = new Schema<IMenuItem>({
         min: 0,
         max: 100,
     },
+    variants: {
+        type: [MenuVariantSchema],
+        default: [],
+    },
     status: {
         type: String,
         enum: Object.values(ItemStatus),
@@ -74,6 +109,5 @@ const MenuItemSchema = new Schema<IMenuItem>({
     }
 }, { timestamps: true });
 
-export default mongoose.models.MenuItem
-    ? mongoose.model<IMenuItem>("MenuItem")
-    : mongoose.model<IMenuItem>("MenuItem", MenuItemSchema);
+delete mongoose.models.MenuItem;
+export default mongoose.model<IMenuItem>("MenuItem", MenuItemSchema);

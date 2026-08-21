@@ -8,8 +8,13 @@ export default function AdminCategoriesClient({ serverData }: any) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setCategories(serverData));
+    dispatch(setCategories(serverData?.data));
   }, [serverData]);
 
-  return <CategoriesTable />;
+  return (
+    <CategoriesTable
+      initialPage={serverData?.meta?.page ?? 1}
+      initialTotalPages={serverData?.meta?.totalPages ?? 1}
+    />
+  );
 }

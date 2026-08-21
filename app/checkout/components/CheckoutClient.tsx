@@ -6,9 +6,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { clearCart, increaseQty, decreaseQty } from "@/features/cart/cartSlice";
 import Image from "next/image";
 import Link from "next/link";
+import Script from "next/script";
 
 export default function CheckoutClient() {
-  const { items } = useSelector((s: any) => s.cart);
+  const cartItems = useSelector((s: any) => s.cart?.items);
+  const items = Array.isArray(cartItems) ? cartItems : [];
   const dispatch = useDispatch();
   // Math Calculation For Billing
   const originalSubtotal = useMemo(
@@ -208,6 +210,10 @@ export default function CheckoutClient() {
 
   return (
     <>
+      <Script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        strategy="lazyOnload"
+      />
       <button className="back-button fixed font-bold top-10 left-5 z-50 bg-primary text-white p-3 rounded-full shadow-lg hover:shadow-xl">
         <Link href={"/menu"}>Back To Menu</Link>
       </button>

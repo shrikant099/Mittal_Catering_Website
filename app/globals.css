@@ -46,6 +46,22 @@ body {
   --font-mono: var(--font-geist-mono);
 }
 
+/* Reusable form input style for admin forms */
+@layer components {
+  .input {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    outline: none;
+    transition: box-shadow 0.15s, border-color 0.15s;
+  }
+  .input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 40%, transparent);
+  }
+}
+
 /* Global body */
 body {
   background-color: var(--background);

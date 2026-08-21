@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
 import cloudinary from "@/lib/cloudinary";
 import Category from "@/models/category/category";
+import { ALLOWED_IMAGE_MESSAGE, isAllowedImageType } from "@/lib/imageValidation";
 
 // Create Category
 export async function POST(req: Request) {
@@ -16,6 +17,13 @@ export async function POST(req: Request) {
         if (!name || !file) {
             return NextResponse.json(
                 { success: false, message: "Name and thumbnail required" },
+                { status: 400 }
+            );
+        }
+
+        if (!isAllowedImageType(file)) {
+            return NextResponse.json(
+                { success: false, message: ALLOWED_IMAGE_MESSAGE },
                 { status: 400 }
             );
         }

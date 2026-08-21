@@ -4,6 +4,8 @@ import Category from "@/models/category/category";
 import MenuItem, { FoodType, ItemStatus } from "@/models/menu/menu";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
+import { ALLOWED_IMAGE_MESSAGE, isAllowedImageType } from "@/lib/imageValidation";
+import { basePriceFromVariants, parseVariants } from "@/lib/menuVariants";
 
 // Create Menu Items
 export async function POST(req: Request) {
@@ -14,14 +16,29 @@ export async function POST(req: Request) {
         const file = formData.get("image") as File;
         const category = formData.get("category") as string;
         const foodType = formData.get("foodType") as FoodType;
-        const price = Number(formData.get("price"));
-        const discount = Number(formData.get("discount") || 0);
         const status = (formData.get("status") as ItemStatus) || ItemStatus.ACTIVE;
         const description = formData.get("description") as string;
+
+        const variants = parseVariants(formData.get("variants"));
+        const hasVariants = variants.length > 0;
+
+        const price = hasVariants
+            ? basePriceFromVariants(variants)
+            : Number(formData.get("price"));
+        const discount = hasVariants
+            ? 0
+            : Number(formData.get("discount") || 0);
 
         if (!name || !file || !category || !foodType || !price || !description) {
             return NextResponse.json(
                 { success: false, message: "Missing required fields" },
+                { status: 400 }
+            );
+        }
+
+        if (!isAllowedImageType(file)) {
+            return NextResponse.json(
+                { success: false, message: ALLOWED_IMAGE_MESSAGE },
                 { status: 400 }
             );
         }
@@ -62,6 +79,7 @@ export async function POST(req: Request) {
             foodType,
             price,
             discount,
+            variants,
             status,
             description,
         });

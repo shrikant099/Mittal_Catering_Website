@@ -24,5 +24,5 @@ export default async function MenuPage({
   );
   const data = await res.json();
 
-  return <AdminMenuClient serverData={data.data} />;
+  return <AdminMenuClient serverData={data} />;
 }

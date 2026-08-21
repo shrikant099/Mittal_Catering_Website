@@ -7,7 +7,13 @@ import MenuTable from "./MenuTable";
 export default function AdminMenuClient({ serverData }: any) {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(setMenuItems(serverData));
+    dispatch(setMenuItems(serverData?.data));
   }, [serverData]);
-  return <MenuTable />;
+
+  return (
+    <MenuTable
+      initialPage={serverData?.meta?.page ?? 1}
+      initialTotalPages={serverData?.meta?.totalPages ?? 1}
+    />
+  );
 }
