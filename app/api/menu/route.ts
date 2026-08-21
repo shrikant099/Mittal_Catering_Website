@@ -113,6 +113,7 @@ export async function GET(req: Request) {
         const search = searchParams.get("search") || "";
         const category = searchParams.get("category");
         const status = searchParams.get("status");
+        const hasImage = searchParams.get("hasImage");
 
         const skip = (page - 1) * limit;
 
@@ -138,6 +139,11 @@ export async function GET(req: Request) {
         //  Filter by status (active / disabled)
         if (status && Object.values(ItemStatus).includes(status as ItemStatus)) {
             query.status = status;
+        }
+
+        //  Only items with a photo (used for image-driven sections like the homepage)
+        if (hasImage === "true") {
+            query.image = { $exists: true, $nin: [null, ""] };
         }
 
         /**

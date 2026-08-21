@@ -15,7 +15,7 @@ import { getBaseUrl } from "@/lib/getBaseUrl";
 
 async function getFeaturedMenuItems() {
   const baseUrl = await getBaseUrl();
-  const res = await fetch(`${baseUrl}/api/menu?status=active&limit=6`, {
+  const res = await fetch(`${baseUrl}/api/menu?status=active&hasImage=true&limit=6`, {
     next: { revalidate: 300 },
   });
   const data = await res.json();
