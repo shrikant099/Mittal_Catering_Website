@@ -5,6 +5,7 @@ import EditMenuModal from "./EditMenuModal";
 import DeleteMenuModal from "./DeleteMenuModal";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import { Search, X } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setMenuItems, updateMenuStatus } from "@/features/menu/menuSlice";
@@ -27,6 +28,8 @@ export default function MenuTable({
   const [del, setDel] = useState<any | null>(null);
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(initialPage);
   const [totalPages, setTotalPages] = useState(initialTotalPages);
   const [loading, setLoading] = useState(false);
@@ -34,8 +37,19 @@ export default function MenuTable({
 
   const dispatch = useDispatch();
 
-  // Fetch the requested page — skips the very first run since the server
-  // already provided page 1.
+  // Debounce the search box so we don't hit the API on every keystroke.
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 400);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // A new search always starts back at page 1.
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
+
+  // Fetch whenever the (debounced) search term or page changes — skips the
+  // very first run since the server already provided page 1.
   useEffect(() => {
     if (isFirstRun.current) {
       isFirstRun.current = false;
@@ -46,7 +60,11 @@ export default function MenuTable({
     (async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/menu?page=${page}&limit=${PAGE_SIZE}`);
+        const res = await fetch(
+          `/api/menu?search=${encodeURIComponent(
+            debouncedSearch
+          )}&page=${page}&limit=${PAGE_SIZE}`
+        );
         const data = await res.json();
         if (!ignore && data.success) {
           dispatch(setMenuItems(data.data));
@@ -60,7 +78,7 @@ export default function MenuTable({
     return () => {
       ignore = true;
     };
-  }, [page, dispatch]);
+  }, [debouncedSearch, page, dispatch]);
 
   async function toggleStatus(item: any) {
     setLoadingId(item._id);
@@ -97,6 +115,33 @@ export default function MenuTable({
             + Add Menu Item
           </button>
         </div>
+      </div>
+
+      {/* SEARCH */}
+      <div className="mb-5 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+        <div className="relative w-full sm:w-72">
+          <Search
+            size={16}
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40"
+          />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search menu item..."
+            className="w-full pl-9 pr-9 py-2.5 rounded-lg bg-[#1e1e1e] border border-white/10 focus:outline-none focus:border-orange-500 transition"
+          />
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition cursor-pointer"
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
+        <p className="text-sm text-white/50">
+          {loading ? "Loading..." : `${items.length} on this page`}
+        </p>
       </div>
 
       <div className="bg-[#1e1e1e] rounded-2xl overflow-hidden shadow-lg">
