@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { UtensilsCrossed } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { addToCart, decreaseQty, increaseQty } from "@/features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -157,7 +156,7 @@ function MenuItemRow({
       "
     >
       <div className="flex gap-3 sm:gap-4">
-        {item.image ? (
+        {item.image && (
           <Image
             src={item.image}
             alt={item.name}
@@ -165,10 +164,6 @@ function MenuItemRow({
             height={90}
             className="rounded-xl object-cover w-[74px] h-[74px] sm:w-[90px] sm:h-[90px] shrink-0 ring-1 ring-white/10"
           />
-        ) : (
-          <div className="rounded-xl w-[74px] h-[74px] sm:w-[90px] sm:h-[90px] shrink-0 ring-1 ring-white/10 bg-white/5 flex items-center justify-center text-white/25">
-            <UtensilsCrossed size={26} />
-          </div>
         )}
 
         <div className="flex-1 min-w-0 py-0.5">

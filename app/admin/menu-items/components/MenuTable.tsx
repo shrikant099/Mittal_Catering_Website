@@ -10,7 +10,6 @@ import { useDispatch } from "react-redux";
 import { setMenuItems, updateMenuStatus } from "@/features/menu/menuSlice";
 import { toast } from "react-hot-toast";
 import Pagination from "../../components/Pagination";
-import { UtensilsCrossed } from "lucide-react";
 
 const PAGE_SIZE = 10;
 
@@ -122,7 +121,7 @@ export default function MenuTable({
               >
                 <td className="p-4 font-medium">{i.name}</td>
                 <td>
-                  {i.image ? (
+                  {i.image && (
                     <Image
                       src={i.image}
                       alt={i.name}
@@ -130,10 +129,6 @@ export default function MenuTable({
                       height={48}
                       className="rounded object-cover w-12 h-12"
                     />
-                  ) : (
-                    <div className="w-12 h-12 rounded bg-white/5 flex items-center justify-center text-white/25">
-                      <UtensilsCrossed size={18} />
-                    </div>
                   )}
                 </td>
                 <td>{i.category?.name || i.category}</td>
